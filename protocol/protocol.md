@@ -2,7 +2,7 @@
 
 ## Overview
 
-Termwire is a lightweight, binary protocol designed for reliable terminal communication over network connections. The protocol uses framing, checksums, and sequence numbers to ensure message integrity and ordering.
+Termwire is a lightweight, binary protocol designed for reliable terminal communication over various transport channels (network sockets, serial ports, etc.). The protocol uses framing, checksums, and sequence numbers to ensure message integrity and ordering regardless of the underlying transport medium.
 
 ## Frame Format
 
@@ -39,12 +39,14 @@ Each message is transmitted as a binary frame with the following structure:
 
 ## Payload Structure
 
-The payload is a variable-length byte sequence that typically contains serialized Protobuf messages. The specific message type is implicitly determined by the protocol context or explicitly encoded within the payload.
+The payload is a variable-length byte sequence that typically contains serialized Protobuf messages. The specific message type and structure are determined by the application layer based on business requirements.
 
-Example:
-- For `MESSAGE_TYPE_DATA`: Payload may contain protobuf-encoded messages like `SalesStartRequest`, `BankSelectRequest`, etc.
+Example use cases:
+- For `MESSAGE_TYPE_DATA`: Payload contains protobuf-encoded application messages (e.g., transaction requests, status queries, etc.)
 - For `MESSAGE_TYPE_PING`/`MESSAGE_TYPE_PONG`: Payload is typically empty (LEN=0).
 - For `MESSAGE_TYPE_CLOSE`: Payload may contain a close reason code or be empty.
+
+> **Note**: The actual Protobuf message definitions are defined separately in `termwire.proto` and are subject to application requirements.
 
 ## Frame Constraints
 
