@@ -1,0 +1,293 @@
+syntax = "proto3";
+
+package termwire;
+
+option go_package = "github.com/sirfi/termwire/protocol";
+option java_package = "com.sirfi.termwire.protocol";
+option java_outer_classname = "TermwireProto";
+option csharp_namespace = "Sirfi.Termwire.Protocol";
+
+message Message {
+    string message_id = 1;
+    string timestamp = 2;
+    bool is_request = 3;
+    
+    oneof body {
+        GetVersionRequest get_version_request = 10;
+        GetVersionResponse get_version_response = 11;
+        GetTerminalInfoRequest get_terminal_info_request = 12;
+        GetTerminalInfoResponse get_terminal_info_response = 13;
+        GetBanksRequest get_banks_request = 20;
+        GetBanksResponse get_banks_response = 21;
+        CardInsertionRequest card_insertion_request = 30;
+        CardInsertionResponse card_insertion_response = 31;
+        PaymentProcessingRequest payment_processing_request = 32;
+        LoyaltyCardInquiryResponse loyalty_card_inquiry_response = 33;
+        LoyaltyPointsConfirmation loyalty_points_confirmation = 34;
+        PaymentCompletionRequest payment_completion_request = 35;
+        PaymentCompletionResponse payment_completion_response = 36;
+        RefundTransactionRequest refund_transaction_request = 42;
+        RefundTransactionResponse refund_transaction_response = 43;
+        VoidTransactionRequest void_transaction_request = 44;
+        VoidTransactionResponse void_transaction_response = 45;
+        XReportRequest x_report_request = 60;
+        XReportResponse x_report_response = 61;
+        ZReportRequest z_report_request = 62;
+        ZReportResponse z_report_response = 63;
+        DetailedReportRequest detailed_report_request = 64;
+        DetailedReportResponse detailed_report_response = 65;
+        GiftCardInquiryRequest gift_card_inquiry_request = 70;
+        GiftCardInquiryResponse gift_card_inquiry_response = 71;
+        GiftCardChargeRequest gift_card_charge_request = 72;
+        GiftCardChargeResponse gift_card_charge_response = 73;
+    }
+}
+
+message GetVersionRequest {
+}
+
+message GetVersionResponse {
+    string code = 1;
+    string version = 2;
+}
+
+message GetTerminalInfoRequest {
+}
+
+message GetTerminalInfoResponse {
+    string code = 1;
+    string version = 2;
+    string serial_number = 3;
+}
+
+message GetBanksRequest {
+}
+
+message Bank {
+    uint32 id = 1;
+    string name = 2;
+}
+
+message GetBanksResponse {
+    string code = 1;
+    repeated Bank banks = 2;
+}
+
+enum TransactionType {
+    SALE = 0;
+    REFUND = 1;
+    VOID = 2;
+    POINT_INQUIRY = 3;
+    POINT_REDEMPTION = 4;
+}
+
+enum PaymentMethod {
+    CASH = 0;
+    CREDIT_CARD = 1;
+    DEBIT_CARD = 2;
+    CHEQUE = 3;
+    ELECTRONIC_FUND_TRANSFER = 4;
+    OTHER = 5;
+}
+
+message BankApplication {
+    uint32 bank_id = 1;
+    string bank_name = 2;
+    string app_label = 3;
+    string aid = 4;
+    uint32 priority = 5;
+    bool supports_loyalty = 6;
+}
+
+message CardInsertionRequest {
+    uint32 transaction_amount_cents = 1;
+    string currency = 2;
+    string transaction_id = 3;
+}
+
+message CardInsertionResponse {
+    string code = 1;
+    string card_number_masked = 2;
+    string card_holder_name = 3;
+    repeated BankApplication available_banks = 4;
+    string message = 5;
+}
+
+message PaymentProcessingRequest {
+    uint32 selected_bank_id = 1;
+    bool use_loyalty_points = 2;
+    string transaction_id = 3;
+    string selected_aid = 4;
+    uint32 installment_count = 5;
+}
+
+message LoyaltyCardInquiryResponse {
+    string code = 1;
+    uint32 available_points = 2;
+    uint32 points_value_cents = 3;
+    string loyalty_card_number = 4;
+    string message = 5;
+}
+
+message LoyaltyPointsConfirmation {
+    uint32 points_to_use = 1;
+    uint32 points_value_cents = 2;
+    string transaction_id = 3;
+}
+
+message PaymentCompletionRequest {
+    uint32 bank_id = 1;
+    uint32 card_amount_cents = 2;
+    uint32 loyalty_amount_cents = 3;
+    uint32 total_amount_cents = 4;
+    string currency = 5;
+    string transaction_id = 6;
+    uint32 installment_count = 7;
+}
+
+message PaymentCompletionResponse {
+    string code = 1;
+    string confirmation_code = 2;
+    string receipt_number = 3;
+    uint32 card_amount_cents = 4;
+    uint32 loyalty_amount_cents = 5;
+    uint32 remaining_points = 6;
+    string message = 7;
+    string auth_code = 8;
+    string currency = 9;
+    uint32 installment_count = 10;
+}
+
+message RefundTransactionRequest {
+    string original_transaction_id = 1;
+    uint32 refund_amount_cents = 2;
+    string reason = 3;
+    string currency = 4;
+    string original_confirmation_code = 5;
+}
+
+message RefundTransactionResponse {
+    string code = 1;
+    string transaction_id = 2;
+    uint32 refund_amount_cents = 3;
+    string confirmation_code = 4;
+    string message = 5;
+    string currency = 6;
+}
+
+message VoidTransactionRequest {
+    string original_transaction_id = 1;
+    string reason = 2;
+    string currency = 3;
+    string original_confirmation_code = 4;
+}
+
+message VoidTransactionResponse {
+    string code = 1;
+    string transaction_id = 2;
+    string confirmation_code = 3;
+    string message = 4;
+    string currency = 5;
+}
+
+message XReportRequest {
+}
+
+message XReportResponse {
+    string code = 1;
+    string report_timestamp = 2;
+    uint32 transaction_count = 3;
+    repeated CurrencyTotals sales_totals = 4;
+    repeated CurrencyTotals refund_totals = 5;
+    repeated CurrencyTotals void_totals = 6;
+    repeated PaymentMethodTotals payment_method_totals = 7;
+    string message = 8;
+}
+
+message ZReportRequest {
+}
+
+message ZReportResponse {
+    string code = 1;
+    string report_timestamp = 2;
+    uint32 transaction_count = 3;
+    repeated CurrencyTotals sales_totals = 4;
+    repeated CurrencyTotals refund_totals = 5;
+    repeated CurrencyTotals void_totals = 6;
+    repeated PaymentMethodTotals payment_method_totals = 7;
+    uint32 z_report_number = 8;
+    string message = 9;
+}
+
+message DetailedReportRequest {
+    string from_timestamp = 1;
+    string to_timestamp = 2;
+    uint32 limit = 3;
+    string cursor = 4;
+    bool include_voids = 5;
+    string currency = 6;
+}
+
+message TransactionEntry {
+    string transaction_id = 1;
+    TransactionType type = 2;
+    uint32 amount_cents = 3;
+    PaymentMethod payment_method = 4;
+    string card_last_four = 5;
+    uint32 loyalty_amount_cents = 6;
+    string confirmation_code = 7;
+    string receipt_number = 8;
+    string timestamp = 9;
+    uint32 bank_id = 10;
+    string currency = 11;
+    uint32 installment_count = 12;
+    string original_transaction_id = 13;
+}
+
+message DetailedReportResponse {
+    string code = 1;
+    repeated TransactionEntry transactions = 2;
+    string next_cursor = 3;
+    string message = 4;
+}
+
+message CurrencyTotals {
+    string currency = 1;
+    uint32 amount_cents = 2;
+    uint32 count = 3;
+}
+
+message PaymentMethodTotals {
+    PaymentMethod method = 1;
+    string currency = 2;
+    uint32 amount_cents = 3;
+    uint32 count = 4;
+}
+
+message GiftCardInquiryRequest {
+    string card_number = 1;
+    string currency = 2;
+}
+
+message GiftCardInquiryResponse {
+    string code = 1;
+    uint32 balance_cents = 2;
+    string message = 3;
+    string currency = 4;
+}
+
+message GiftCardChargeRequest {
+    string card_number = 1;
+    uint32 amount_cents = 2;
+    uint32 transaction_amount_cents = 3;
+    string currency = 4;
+}
+
+message GiftCardChargeResponse {
+    string code = 1;
+    uint32 new_balance_cents = 2;
+    uint32 points_earned = 3;
+    string message = 4;
+    string currency = 5;
+}
+
