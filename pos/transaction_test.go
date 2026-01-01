@@ -25,9 +25,9 @@ func TestTransactionStateString(t *testing.T) {
 
 func TestNewTransactionManager(t *testing.T) {
 	config := &Config{
-		TerminalID:            "TEST-001",
-		MaxTransactionAmount:  999999,
-		SupportedCurrencies:   []string{"TRY", "USD", "EUR"},
+		TerminalID:           "TEST-001",
+		MaxTransactionAmount: 999999,
+		SupportedCurrencies:  []string{"TRY", "USD", "EUR"},
 	}
 	tm := NewTransactionManager(config)
 
@@ -42,9 +42,9 @@ func TestNewTransactionManager(t *testing.T) {
 
 func TestCreateTransaction(t *testing.T) {
 	tm := NewTransactionManager(&Config{
-		TerminalID:            "TEST-001",
-		MaxTransactionAmount:  999999,
-		SupportedCurrencies:   []string{"TRY", "USD", "EUR"},
+		TerminalID:           "TEST-001",
+		MaxTransactionAmount: 999999,
+		SupportedCurrencies:  []string{"TRY", "USD", "EUR"},
 	})
 
 	tx, err := tm.CreateTransaction("TXN-001", 10000, "TRY")
@@ -75,9 +75,9 @@ func TestCreateTransaction(t *testing.T) {
 
 func TestGetTransaction(t *testing.T) {
 	tm := NewTransactionManager(&Config{
-		TerminalID:            "TEST-001",
-		MaxTransactionAmount:  999999,
-		SupportedCurrencies:   []string{"TRY", "USD", "EUR"},
+		TerminalID:           "TEST-001",
+		MaxTransactionAmount: 999999,
+		SupportedCurrencies:  []string{"TRY", "USD", "EUR"},
 	})
 	tx, err := tm.CreateTransaction("TXN-001", 5000, "TRY")
 	if err != nil {
@@ -100,9 +100,9 @@ func TestGetTransaction(t *testing.T) {
 
 func TestUpdateTransactionState(t *testing.T) {
 	tm := NewTransactionManager(&Config{
-		TerminalID:            "TEST-001",
-		MaxTransactionAmount:  999999,
-		SupportedCurrencies:   []string{"TRY", "USD", "EUR"},
+		TerminalID:           "TEST-001",
+		MaxTransactionAmount: 999999,
+		SupportedCurrencies:  []string{"TRY", "USD", "EUR"},
 	})
 	tx, err := tm.CreateTransaction("TXN-001", 5000, "TRY")
 	if err != nil {
@@ -126,9 +126,9 @@ func TestUpdateTransactionState(t *testing.T) {
 
 func TestCompleteTransaction(t *testing.T) {
 	tm := NewTransactionManager(&Config{
-		TerminalID:            "TEST-001",
-		MaxTransactionAmount:  999999,
-		SupportedCurrencies:   []string{"TRY", "USD", "EUR"},
+		TerminalID:           "TEST-001",
+		MaxTransactionAmount: 999999,
+		SupportedCurrencies:  []string{"TRY", "USD", "EUR"},
 	})
 	tx, err := tm.CreateTransaction("TXN-COMPLETE", 5000, "TRY")
 	if err != nil {
@@ -144,9 +144,9 @@ func TestCompleteTransaction(t *testing.T) {
 
 func TestFailTransaction(t *testing.T) {
 	tm := NewTransactionManager(&Config{
-		TerminalID:            "TEST-001",
-		MaxTransactionAmount:  999999,
-		SupportedCurrencies:   []string{"TRY", "USD", "EUR"},
+		TerminalID:           "TEST-001",
+		MaxTransactionAmount: 999999,
+		SupportedCurrencies:  []string{"TRY", "USD", "EUR"},
 	})
 	tx, err := tm.CreateTransaction("TXN-FAIL", 5000, "TRY")
 	if err != nil {
@@ -162,9 +162,9 @@ func TestFailTransaction(t *testing.T) {
 
 func TestTransactionConcurrency(t *testing.T) {
 	tm := NewTransactionManager(&Config{
-		TerminalID:            "TEST-001",
-		MaxTransactionAmount:  999999,
-		SupportedCurrencies:   []string{"TRY", "USD", "EUR"},
+		TerminalID:           "TEST-001",
+		MaxTransactionAmount: 999999,
+		SupportedCurrencies:  []string{"TRY", "USD", "EUR"},
 	})
 	done := make(chan bool, 5)
 
@@ -192,9 +192,9 @@ func TestTransactionConcurrency(t *testing.T) {
 
 func TestTransactionTimestamps(t *testing.T) {
 	tm := NewTransactionManager(&Config{
-		TerminalID:            "TEST-001",
-		MaxTransactionAmount:  999999,
-		SupportedCurrencies:   []string{"TRY", "USD", "EUR"},
+		TerminalID:           "TEST-001",
+		MaxTransactionAmount: 999999,
+		SupportedCurrencies:  []string{"TRY", "USD", "EUR"},
 	})
 	before := time.Now()
 	tx, err := tm.CreateTransaction("TXN-001", 1000, "TRY")

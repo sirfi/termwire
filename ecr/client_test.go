@@ -142,13 +142,13 @@ func TestClientNotConnected(t *testing.T) {
 
 func TestConfigValues(t *testing.T) {
 	config := &Config{
-		POSHost:      "192.168.1.1",
-		POSPort:      8080,
+		POSHost:        "192.168.1.1",
+		POSPort:        8080,
 		ConnectTimeout: 5 * time.Second,
-		ReadTimeout:  10 * time.Second,
-		WriteTimeout: 10 * time.Second,
-		MaxRetries:   3,
-		RetryDelay:   1 * time.Second,
+		ReadTimeout:    10 * time.Second,
+		WriteTimeout:   10 * time.Second,
+		MaxRetries:     3,
+		RetryDelay:     1 * time.Second,
 	}
 
 	client := NewClient(config)
