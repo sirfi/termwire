@@ -348,6 +348,47 @@ killall pos-terminal
 - FLAGS field is properly handled (index 9)
 - CRC32 calculation includes all frame fields
 
+## Testing
+
+### Running Unit Tests
+
+```bash
+# Run all tests
+go test -v ./...
+
+# Run tests with coverage
+go test -cover ./...
+
+# Run specific package tests
+go test -v ./protocol
+go test -v ./pos
+go test -v ./ecr
+```
+
+### Test Coverage
+
+- **Protocol** (`protocol_test.go`): 4 tests covering frame validation, CRC32, and length calculation
+- **POS Card** (`pos/card_test.go`): 5 tests for card reader simulation and bank validation
+- **POS Transaction** (`pos/transaction_test.go`): 9 tests for transaction state management
+- **ECR Client** (`ecr/client_test.go`): 9 tests for client initialization and sequence handling
+- **ECR Payment** (`ecr/payment_test.go`): 10 tests for payment structures
+
+**Total**: 37 unit tests, all passing
+
+### Running Integration Tests
+
+For end-to-end testing, run the POS terminal and ECR client examples in separate terminals:
+
+```bash
+# Terminal 1: Start POS server
+go build -o bin/pos-terminal ./pos/cmd/
+./bin/pos-terminal
+
+# Terminal 2: Run payment example
+go build -o bin/simple-payment ./ecr/examples/simple_payment/
+./bin/simple-payment
+```
+
 ## Implementation Notes
 
 - **Card Reader**: Mock implementation for testing
