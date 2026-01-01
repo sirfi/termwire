@@ -47,7 +47,7 @@ func (m *Frame) CalculateCRC32() uint32 {
 	buf[1] = m.Type
 	buf[2] = byte(m.Sequence >> 8)
 	buf[3] = byte(m.Sequence)
-	copy(buf[6:], m.Payload)
+	copy(buf[4:], m.Payload)
 
 	return crc32.ChecksumIEEE(buf)
 }
@@ -91,10 +91,11 @@ func (m *Frame) Serialize() []byte {
 	data[6] = m.Type
 	data[7] = byte(m.Sequence >> 8)
 	data[8] = byte(m.Sequence)
+	data[9] = 0 // FLAGS - reserved, always 0
 	if payloadLen > 0 {
-		copy(data[9:9+payloadLen], m.Payload)
+		copy(data[10:10+payloadLen], m.Payload)
 	}
-	crcStart := 9 + payloadLen
+	crcStart := 10 + payloadLen
 	data[crcStart] = byte(m.CRC32 >> 24)
 	data[crcStart+1] = byte(m.CRC32 >> 16)
 	data[crcStart+2] = byte(m.CRC32 >> 8)
@@ -127,10 +128,10 @@ func ParseFrame(data []byte) *Frame {
 
 	if payloadLen > 0 {
 		m.Payload = make([]byte, payloadLen)
-		copy(m.Payload, data[9:9+payloadLen])
+		copy(m.Payload, data[10:10+payloadLen])
 	}
 
-	crcStart := 9 + payloadLen
+	crcStart := 10 + payloadLen
 	m.CRC32 = uint32(data[crcStart])<<24 | uint32(data[crcStart+1])<<16 | uint32(data[crcStart+2])<<8 | uint32(data[crcStart+3])
 
 	return m
