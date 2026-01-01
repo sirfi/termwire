@@ -193,7 +193,7 @@ func TestPaymentFlowConcurrency(t *testing.T) {
 	flow := NewPaymentFlow(mockAPI)
 	done := make(chan bool, 5)
 
-	for i := 0; i < 5; i++ {
+	for i := 1; i <= 5; i++ {
 		go func(idx int) {
 			if flow == nil {
 				t.Error("Payment flow should not be nil")
@@ -201,8 +201,8 @@ func TestPaymentFlowConcurrency(t *testing.T) {
 			req := &PaymentRequest{
 				AmountCents: uint32(idx * 1000),
 			}
-			if req.AmountCents < 0 {
-				t.Error("Amount should be non-negative")
+			if req.AmountCents == 0 {
+				t.Error("Amount should be greater than zero")
 			}
 			done <- true
 		}(i)
