@@ -7,10 +7,15 @@ option java_package = "com.sirfi.termwire.protocol";
 option java_outer_classname = "TermwireProto";
 option csharp_namespace = "Sirfi.Termwire.Protocol";
 
+enum MessageType {
+    REQUEST = 0;
+    RESPONSE = 1;
+}
+
 message Message {
     string message_id = 1;
     string timestamp = 2;
-    bool is_request = 3;
+    MessageType type = 3;
     
     oneof body {
         GetVersionRequest get_version_request = 10;
