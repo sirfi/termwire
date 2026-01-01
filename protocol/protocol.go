@@ -1,6 +1,4 @@
-//go:generate protoc --go_out=. --go_opt=paths=source_relative \
-//  --go-grpc_out=. --go-grpc_opt=paths=source_relative \
-//  --proto_path=. protocol/termwire.proto
+//go:generate protoc --go_out=. --go_opt=paths=source_relative --proto_path=. termwire.proto
 
 package protocol
 
@@ -12,16 +10,16 @@ const MAGIC = "TW"
 const STX = 0x02
 const ETX = 0x03
 
-type MessageType uint8
+type FrameType uint8
 
 const (
-	MESSAGE_TYPE_PING MessageType = iota + 1
-	MESSAGE_TYPE_PONG
-	MESSAGE_TYPE_DATA
-	MESSAGE_TYPE_CLOSE
+	FRAME_TYPE_PING FrameType = iota + 1
+	FRAME_TYPE_PONG
+	FRAME_TYPE_DATA
+	FRAME_TYPE_CLOSE
 )
 
-type Message struct {
+type Frame struct {
 	Version  uint8
 	Type     uint8
 	Sequence uint16
@@ -29,11 +27,11 @@ type Message struct {
 	CRC32    uint32
 }
 
-func (m *Message) IsValid() bool {
+func (m *Frame) IsValid() bool {
 	if m.Version != VERSION {
 		return false
 	}
-	if m.Type < uint8(MESSAGE_TYPE_PING) || m.Type > uint8(MESSAGE_TYPE_CLOSE) {
+	if m.Type < uint8(FRAME_TYPE_PING) || m.Type > uint8(FRAME_TYPE_CLOSE) {
 		return false
 	}
 	calculatedCRC := m.CalculateCRC32()
@@ -43,7 +41,7 @@ func (m *Message) IsValid() bool {
 	return true
 }
 
-func (m *Message) CalculateCRC32() uint32 {
+func (m *Frame) CalculateCRC32() uint32 {
 	buf := make([]byte, 4+len(m.Payload))
 	buf[0] = m.Version
 	buf[1] = m.Type
@@ -54,8 +52,8 @@ func (m *Message) CalculateCRC32() uint32 {
 	return crc32.ChecksumIEEE(buf)
 }
 
-func NewMessage(msgType MessageType, sequence uint16, payload []byte) *Message {
-	m := &Message{
+func NewFrame(msgType FrameType, sequence uint16, payload []byte) *Frame {
+	m := &Frame{
 		Version:  VERSION,
 		Type:     uint8(msgType),
 		Sequence: sequence,
@@ -81,7 +79,7 @@ func CalculateLength(payloadLen int) int {
 	return /*STX*/ 1 + /*MAGIC*/ 2 + /*VER*/ 1 + /*LEN*/ 2 + /*TYPE*/ 1 + /*SEQ*/ 2 + /*FLAGS*/ 1 + payloadLen + /*CRC32*/ 4 + /*ETX*/ 1
 }
 
-func (m *Message) Serialize() []byte {
+func (m *Frame) Serialize() []byte {
 	payloadLen := len(m.Payload)
 	totalLen := CalculateLength(payloadLen)
 	data := make([]byte, totalLen)
@@ -105,7 +103,7 @@ func (m *Message) Serialize() []byte {
 	return data
 }
 
-func ParseMessage(data []byte) *Message {
+func ParseFrame(data []byte) *Frame {
 	minLen := CalculateLength(0)
 	if len(data) < minLen {
 		return nil
@@ -121,7 +119,7 @@ func ParseMessage(data []byte) *Message {
 		return nil
 	}
 
-	m := &Message{
+	m := &Frame{
 		Version:  data[3],
 		Type:     data[6],
 		Sequence: uint16(data[7])<<8 | uint16(data[8]),
