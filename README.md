@@ -1,6 +1,8 @@
 # Termwire
 
-Termwire is a POS (Point of Sale) terminal communication protocol and implementation written in Go. It provides a robust, frame-based protocol for communication between ECR (Electronic Cash Register) systems and POS terminals.
+Termwire is a **demonstrative** POS (Point of Sale) terminal communication protocol and implementation written in Go. It provides a robust, frame-based protocol for communication between ECR (Electronic Cash Register) systems and POS terminals.
+
+> **Note**: This is an example protocol implementation created for educational and demonstration purposes. It showcases best practices in protocol design, Go programming, and system architecture.
 
 ## Features
 
