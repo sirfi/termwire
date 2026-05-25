@@ -2,10 +2,13 @@ package pos
 
 import (
 	"bufio"
+	"crypto/tls"
+	"crypto/x509"
 	"fmt"
 	"io"
-	"log"
+	"log/slog"
 	"net"
+	"os"
 	"sync"
 	"time"
 
@@ -23,6 +26,7 @@ type Server struct {
 	connMutex   sync.RWMutex
 	shutdown    chan struct{}
 	wg          sync.WaitGroup
+	logger      *slog.Logger
 }
 
 // ClientConnection represents a connected ECR client
@@ -38,32 +42,65 @@ type ClientConnection struct {
 
 // NewServer creates a new POS server
 func NewServer(config *Config) *Server {
+	logger := slog.New(slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{Level: config.LogLevel}))
 	return &Server{
 		config:      config,
 		handler:     NewMessageHandler(config),
 		connections: make(map[string]*ClientConnection),
 		shutdown:    make(chan struct{}),
+		logger:      logger,
 	}
 }
 
 // Start starts the TCP server
 func (s *Server) Start() error {
 	addr := fmt.Sprintf("%s:%d", s.config.Host, s.config.Port)
-	log.Printf("[SERVER] Starting POS server on %s", addr)
+	s.logger.Info("starting POS server", slog.String("addr", addr), slog.Bool("tls", s.config.TLSEnabled))
 
-	listener, err := net.Listen("tcp", addr)
+	var (
+		listener net.Listener
+		err      error
+	)
+
+	if s.config.TLSEnabled {
+		cert, err := tls.LoadX509KeyPair(s.config.TLSCertFile, s.config.TLSKeyFile)
+		if err != nil {
+			return fmt.Errorf("failed to load TLS cert/key: %w", err)
+		}
+
+		tlsCfg := &tls.Config{
+			Certificates: []tls.Certificate{cert},
+			MinVersion:   tls.VersionTLS13,
+		}
+
+		if s.config.TLSCAFile != "" {
+			caPEM, err := os.ReadFile(s.config.TLSCAFile)
+			if err != nil {
+				return fmt.Errorf("failed to read CA file: %w", err)
+			}
+			caPool := x509.NewCertPool()
+			if !caPool.AppendCertsFromPEM(caPEM) {
+				return fmt.Errorf("failed to parse CA certificate")
+			}
+			tlsCfg.ClientCAs = caPool
+			tlsCfg.ClientAuth = tls.RequireAndVerifyClientCert
+		}
+
+		listener, err = tls.Listen("tcp", addr, tlsCfg)
+	} else {
+		listener, err = net.Listen("tcp", addr)
+	}
+
 	if err != nil {
 		return fmt.Errorf("failed to start server: %w", err)
 	}
 
 	s.listener = listener
-	log.Printf("[SERVER] POS server started successfully on %s", addr)
+	s.logger.Info("POS server started", slog.String("addr", addr))
 
-	// Start accepting connections
 	s.wg.Add(1)
 	go s.acceptConnections()
 
-	// Start connection monitor
 	s.wg.Add(1)
 	go s.monitorConnections()
 
@@ -77,13 +114,14 @@ func (s *Server) acceptConnections() {
 	for {
 		select {
 		case <-s.shutdown:
-			log.Println("[SERVER] Stopping accept loop")
+			s.logger.Info("accept loop stopped")
 			return
 		default:
 		}
 
-		// Set accept deadline to allow checking shutdown channel
-		s.listener.(*net.TCPListener).SetDeadline(time.Now().Add(1 * time.Second))
+		if dl, ok := s.listener.(interface{ SetDeadline(t time.Time) error }); ok {
+			dl.SetDeadline(time.Now().Add(1 * time.Second))
+		}
 
 		conn, err := s.listener.Accept()
 		if err != nil {
@@ -94,14 +132,13 @@ func (s *Server) acceptConnections() {
 			case <-s.shutdown:
 				return
 			default:
-				log.Printf("[SERVER] Error accepting connection: %v", err)
+				s.logger.Error("accept error", slog.Any("error", err))
 				continue
 			}
 		}
 
-		log.Printf("[SERVER] New connection from %s", conn.RemoteAddr())
+		s.logger.Info("new connection", slog.String("remote_addr", conn.RemoteAddr().String()))
 
-		// Handle the connection
 		s.wg.Add(1)
 		go s.handleConnection(conn)
 	}
@@ -122,23 +159,23 @@ func (s *Server) handleConnection(conn net.Conn) {
 		writer:     bufio.NewWriter(conn),
 	}
 
-	// Register connection
 	s.connMutex.Lock()
 	s.connections[clientID] = clientConn
 	s.connMutex.Unlock()
 
-	log.Printf("[SERVER] Client connected: %s (%s)", clientID, conn.RemoteAddr())
+	s.logger.Info("client connected",
+		slog.String("client_id", clientID),
+		slog.String("remote_addr", conn.RemoteAddr().String()),
+	)
 
-	// Handle client messages
 	s.handleClientMessages(clientConn)
 
-	// Cleanup on disconnect
 	s.connMutex.Lock()
 	delete(s.connections, clientID)
 	s.connMutex.Unlock()
 
 	conn.Close()
-	log.Printf("[SERVER] Client disconnected: %s", clientID)
+	s.logger.Info("client disconnected", slog.String("client_id", clientID))
 }
 
 // handleClientMessages handles messages from a client
@@ -150,28 +187,27 @@ func (s *Server) handleClientMessages(client *ClientConnection) {
 		default:
 		}
 
-		// Set read deadline
 		client.conn.SetReadDeadline(time.Now().Add(s.config.ReadTimeout))
 
-		// Read frame
 		frame, err := s.readFrame(client.reader)
 		if err != nil {
 			if err == io.EOF {
-				log.Printf("[SERVER] Client %s disconnected", client.id)
+				s.logger.Info("client disconnected (EOF)", slog.String("client_id", client.id))
 			} else if netErr, ok := err.(net.Error); ok && netErr.Timeout() {
-				log.Printf("[SERVER] Read timeout for client %s", client.id)
+				s.logger.Warn("read timeout", slog.String("client_id", client.id))
 			} else {
-				log.Printf("[SERVER] Error reading frame from client %s: %v", client.id, err)
+				s.logger.Error("frame read error",
+					slog.String("client_id", client.id),
+					slog.Any("error", err),
+				)
 			}
 			return
 		}
 
 		client.lastActive = time.Now()
 
-		// Handle frame
 		if err := s.handleFrame(client, frame); err != nil {
-			log.Printf("[SERVER] Error handling frame: %v", err)
-			// Send error response and continue
+			s.logger.Error("frame handle error", slog.Any("error", err))
 			continue
 		}
 	}
@@ -179,103 +215,16 @@ func (s *Server) handleClientMessages(client *ClientConnection) {
 
 // readFrame reads a complete frame from the connection
 func (s *Server) readFrame(reader *bufio.Reader) (*protocol.Frame, error) {
-	// Read until we find STX
-	for {
-		b, err := reader.ReadByte()
-		if err != nil {
-			return nil, err
-		}
-		if b == protocol.STX {
-			break
-		}
-	}
-
-	// Read MAGIC
-	magic := make([]byte, 2)
-	if _, err := io.ReadFull(reader, magic); err != nil {
-		return nil, err
-	}
-	if string(magic) != protocol.MAGIC {
-		return nil, fmt.Errorf("invalid magic bytes: %v", magic)
-	}
-
-	// Read version
-	version, err := reader.ReadByte()
-	if err != nil {
-		return nil, err
-	}
-
-	// Read length (2 bytes)
-	lengthBytes := make([]byte, 2)
-	if _, err := io.ReadFull(reader, lengthBytes); err != nil {
-		return nil, err
-	}
-	payloadLen := int(lengthBytes[0])<<8 | int(lengthBytes[1])
-
-	// Read type
-	frameType, err := reader.ReadByte()
-	if err != nil {
-		return nil, err
-	}
-
-	// Read sequence (2 bytes)
-	seqBytes := make([]byte, 2)
-	if _, err := io.ReadFull(reader, seqBytes); err != nil {
-		return nil, err
-	}
-	sequence := uint16(seqBytes[0])<<8 | uint16(seqBytes[1])
-
-	// Read flags
-	_, err = reader.ReadByte()
-	if err != nil {
-		return nil, err
-	}
-
-	// Read payload
-	payload := make([]byte, payloadLen)
-	if payloadLen > 0 {
-		if _, err := io.ReadFull(reader, payload); err != nil {
-			return nil, err
-		}
-	}
-
-	// Read CRC32 (4 bytes)
-	crcBytes := make([]byte, 4)
-	if _, err := io.ReadFull(reader, crcBytes); err != nil {
-		return nil, err
-	}
-	crc32Value := uint32(crcBytes[0])<<24 | uint32(crcBytes[1])<<16 |
-		uint32(crcBytes[2])<<8 | uint32(crcBytes[3])
-
-	// Read ETX
-	etx, err := reader.ReadByte()
-	if err != nil {
-		return nil, err
-	}
-	if etx != protocol.ETX {
-		return nil, fmt.Errorf("invalid ETX byte: 0x%02x", etx)
-	}
-
-	frame := &protocol.Frame{
-		Version:  version,
-		Type:     frameType,
-		Sequence: sequence,
-		Payload:  payload,
-		CRC32:    crc32Value,
-	}
-
-	// Validate frame
-	if !frame.IsValid() {
-		return nil, fmt.Errorf("invalid frame: CRC mismatch")
-	}
-
-	return frame, nil
+	return protocol.ReadFrame(reader)
 }
 
 // handleFrame processes a received frame
 func (s *Server) handleFrame(client *ClientConnection, frame *protocol.Frame) error {
-	log.Printf("[SERVER] Received frame - Type: %d, Sequence: %d, PayloadLen: %d",
-		frame.Type, frame.Sequence, len(frame.Payload))
+	s.logger.Debug("received frame",
+		slog.Int("type", int(frame.Type)),
+		slog.Int("sequence", int(frame.Sequence)),
+		slog.Int("payload_len", len(frame.Payload)),
+	)
 
 	switch protocol.FrameType(frame.Type) {
 	case protocol.FRAME_TYPE_PING:
@@ -291,38 +240,37 @@ func (s *Server) handleFrame(client *ClientConnection, frame *protocol.Frame) er
 
 // handlePing handles a ping frame
 func (s *Server) handlePing(client *ClientConnection, frame *protocol.Frame) error {
-	log.Printf("[SERVER] Received PING from client %s", client.id)
-
-	// Send PONG response
+	s.logger.Debug("received PING", slog.String("client_id", client.id))
 	pongFrame := protocol.NewFrame(protocol.FRAME_TYPE_PONG, frame.Sequence, nil)
 	return s.sendFrame(client, pongFrame)
 }
 
 // handleData handles a data frame
 func (s *Server) handleData(client *ClientConnection, frame *protocol.Frame) error {
-	// Parse protobuf message
 	msg := &pb.Message{}
 	if err := proto.Unmarshal(frame.Payload, msg); err != nil {
 		return fmt.Errorf("failed to unmarshal message: %w", err)
 	}
 
-	log.Printf("[SERVER] Received message - ID: %s, Type: %T", msg.MessageId, msg.Body)
+	s.logger.Info("received message",
+		slog.String("message_id", msg.MessageId),
+		slog.String("client_id", client.id),
+	)
 
-	// Handle the message
 	response, err := s.handler.HandleMessage(msg)
 	if err != nil {
-		log.Printf("[SERVER] Error handling message: %v", err)
-		// Send error response
+		s.logger.Error("message handle error",
+			slog.String("message_id", msg.MessageId),
+			slog.Any("error", err),
+		)
 		return s.sendErrorResponse(client, frame.Sequence, err.Error())
 	}
 
-	// Marshal response
 	responseData, err := proto.Marshal(response)
 	if err != nil {
 		return fmt.Errorf("failed to marshal response: %w", err)
 	}
 
-	// Send response frame
 	client.seqMutex.Lock()
 	client.sequence++
 	responseSeq := client.sequence
@@ -334,8 +282,8 @@ func (s *Server) handleData(client *ClientConnection, frame *protocol.Frame) err
 
 // handleClose handles a close frame
 func (s *Server) handleClose(client *ClientConnection, frame *protocol.Frame) error {
-	log.Printf("[SERVER] Received CLOSE from client %s", client.id)
-	return io.EOF // Signal to close connection
+	s.logger.Info("received CLOSE", slog.String("client_id", client.id))
+	return io.EOF
 }
 
 // sendFrame sends a frame to the client
@@ -353,8 +301,11 @@ func (s *Server) sendFrame(client *ClientConnection, frame *protocol.Frame) erro
 		return fmt.Errorf("failed to flush writer: %w", err)
 	}
 
-	log.Printf("[SERVER] Sent frame - Type: %d, Sequence: %d, PayloadLen: %d",
-		frame.Type, frame.Sequence, len(frame.Payload))
+	s.logger.Debug("sent frame",
+		slog.Int("type", int(frame.Type)),
+		slog.Int("sequence", int(frame.Sequence)),
+		slog.Int("payload_len", len(frame.Payload)),
+	)
 
 	return nil
 }
@@ -372,13 +323,11 @@ func (s *Server) sendErrorResponse(client *ClientConnection, sequence uint16, er
 		},
 	}
 
-	// Marshal error message
 	errorData, err := proto.Marshal(errorResponse)
 	if err != nil {
 		return err
 	}
 
-	// Send error frame
 	errorFrame := protocol.NewFrame(protocol.FRAME_TYPE_DATA, sequence, errorData)
 	return s.sendFrame(client, errorFrame)
 }
@@ -408,7 +357,7 @@ func (s *Server) checkIdleConnections() {
 	now := time.Now()
 	for id, client := range s.connections {
 		if now.Sub(client.lastActive) > s.config.IdleTimeout {
-			log.Printf("[SERVER] Closing idle connection: %s", id)
+			s.logger.Info("closing idle connection", slog.String("client_id", id))
 			client.conn.Close()
 			delete(s.connections, id)
 		}
@@ -417,7 +366,7 @@ func (s *Server) checkIdleConnections() {
 
 // Stop stops the server gracefully
 func (s *Server) Stop() {
-	log.Println("[SERVER] Stopping POS server...")
+	s.logger.Info("stopping POS server")
 
 	close(s.shutdown)
 
@@ -425,17 +374,15 @@ func (s *Server) Stop() {
 		s.listener.Close()
 	}
 
-	// Close all active connections
 	s.connMutex.Lock()
 	for _, client := range s.connections {
 		client.conn.Close()
 	}
 	s.connMutex.Unlock()
 
-	// Wait for all goroutines to finish
 	s.wg.Wait()
 
-	log.Println("[SERVER] POS server stopped")
+	s.logger.Info("POS server stopped")
 }
 
 // GetStats returns server statistics

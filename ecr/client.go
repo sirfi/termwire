@@ -2,10 +2,12 @@ package ecr
 
 import (
 	"bufio"
+	"crypto/tls"
+	"crypto/x509"
 	"fmt"
-	"io"
-	"log"
+	"log/slog"
 	"net"
+	"os"
 	"sync"
 	"time"
 
@@ -24,6 +26,7 @@ type Client struct {
 	seqMutex  sync.Mutex
 	connected bool
 	connMutex sync.RWMutex
+	logger    *slog.Logger
 }
 
 // NewClient creates a new ECR client
@@ -31,10 +34,12 @@ func NewClient(config *Config) *Client {
 	if config == nil {
 		config = DefaultConfig()
 	}
+	logger := slog.New(slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{Level: config.LogLevel}))
 	return &Client{
 		config:    config,
 		sequence:  0,
 		connected: false,
+		logger:    logger,
 	}
 }
 
@@ -48,9 +53,51 @@ func (c *Client) Connect() error {
 	}
 
 	addr := net.JoinHostPort(c.config.POSHost, fmt.Sprintf("%d", c.config.POSPort))
-	c.logDebug("Connecting to POS terminal at %s", addr)
+	c.logDebug("connecting to POS terminal", slog.String("addr", addr))
 
-	conn, err := net.DialTimeout("tcp", addr, c.config.ConnectTimeout)
+	var (
+		conn net.Conn
+		err  error
+	)
+
+	if c.config.TLSEnabled {
+		tlsCfg := &tls.Config{
+			MinVersion: tls.VersionTLS13,
+			ServerName: c.config.TLSServerName,
+		}
+		if tlsCfg.ServerName == "" {
+			tlsCfg.ServerName = c.config.POSHost
+		}
+
+		if c.config.TLSCAFile != "" {
+			caPEM, readErr := os.ReadFile(c.config.TLSCAFile)
+			if readErr != nil {
+				return fmt.Errorf("failed to read CA file: %w", readErr)
+			}
+			caPool := x509.NewCertPool()
+			if !caPool.AppendCertsFromPEM(caPEM) {
+				return fmt.Errorf("failed to parse CA certificate")
+			}
+			tlsCfg.RootCAs = caPool
+		}
+
+		if c.config.TLSCertFile != "" && c.config.TLSKeyFile != "" {
+			cert, certErr := tls.LoadX509KeyPair(c.config.TLSCertFile, c.config.TLSKeyFile)
+			if certErr != nil {
+				return fmt.Errorf("failed to load client TLS cert/key: %w", certErr)
+			}
+			tlsCfg.Certificates = []tls.Certificate{cert}
+		}
+
+		dialer := &tls.Dialer{
+			NetDialer: &net.Dialer{Timeout: c.config.ConnectTimeout},
+			Config:    tlsCfg,
+		}
+		conn, err = dialer.Dial("tcp", addr)
+	} else {
+		conn, err = net.DialTimeout("tcp", addr, c.config.ConnectTimeout)
+	}
+
 	if err != nil {
 		return fmt.Errorf("failed to connect to POS: %w", err)
 	}
@@ -60,7 +107,7 @@ func (c *Client) Connect() error {
 	c.writer = bufio.NewWriter(conn)
 	c.connected = true
 
-	c.logDebug("Connected to POS terminal successfully")
+	c.logDebug("connected to POS terminal successfully")
 
 	return nil
 }
@@ -74,7 +121,7 @@ func (c *Client) Disconnect() error {
 		return nil
 	}
 
-	c.logDebug("Disconnecting from POS terminal")
+	c.logDebug("disconnecting from POS terminal")
 
 	// Send close frame
 	if c.conn != nil {
@@ -88,7 +135,7 @@ func (c *Client) Disconnect() error {
 	c.reader = nil
 	c.writer = nil
 
-	c.logDebug("Disconnected from POS terminal")
+	c.logDebug("disconnected from POS terminal")
 
 	return nil
 }
@@ -100,7 +147,9 @@ func (c *Client) IsConnected() bool {
 	return c.connected
 }
 
-// SendMessage sends a message to the POS and waits for response
+// SendMessage sends a message to the POS and waits for response.
+// Retries up to config.MaxRetries times on transient network errors, preserving the
+// original message_id so the server can return a cached idempotent response.
 func (c *Client) SendMessage(msg *pb.Message) (*pb.Message, error) {
 	c.connMutex.RLock()
 	if !c.connected {
@@ -109,37 +158,43 @@ func (c *Client) SendMessage(msg *pb.Message) (*pb.Message, error) {
 	}
 	c.connMutex.RUnlock()
 
-	// Marshal message
 	data, err := proto.Marshal(msg)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal message: %w", err)
 	}
 
-	// Create frame
 	frame := protocol.NewFrame(protocol.FRAME_TYPE_DATA, c.getNextSequence(), data)
 
-	c.logDebug("Sending message - ID: %s, Type: %T", msg.MessageId, msg.Body)
+	c.logDebug("sending message", slog.String("message_id", msg.MessageId))
 
-	// Send frame
-	if err := c.writeFrame(frame); err != nil {
-		return nil, fmt.Errorf("failed to send frame: %w", err)
+	var lastErr error
+	for attempt := 0; attempt <= c.config.MaxRetries; attempt++ {
+		if attempt > 0 {
+			c.logDebug("retry", slog.Int("attempt", attempt), slog.Int("max", c.config.MaxRetries), slog.String("message_id", msg.MessageId))
+			time.Sleep(c.config.RetryDelay)
+		}
+
+		if err := c.writeFrame(frame); err != nil {
+			lastErr = fmt.Errorf("failed to send frame: %w", err)
+			continue
+		}
+
+		responseFrame, err := c.readFrame()
+		if err != nil {
+			lastErr = fmt.Errorf("failed to read response: %w", err)
+			continue
+		}
+
+		response := &pb.Message{}
+		if err := proto.Unmarshal(responseFrame.Payload, response); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal response: %w", err)
+		}
+
+		c.logDebug("received response", slog.String("message_id", response.MessageId))
+		return response, nil
 	}
 
-	// Read response
-	responseFrame, err := c.readFrame()
-	if err != nil {
-		return nil, fmt.Errorf("failed to read response: %w", err)
-	}
-
-	// Parse response
-	response := &pb.Message{}
-	if err := proto.Unmarshal(responseFrame.Payload, response); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal response: %w", err)
-	}
-
-	c.logDebug("Received response - ID: %s, Type: %T", response.MessageId, response.Body)
-
-	return response, nil
+	return nil, lastErr
 }
 
 // Ping sends a ping to the POS terminal
@@ -151,7 +206,7 @@ func (c *Client) Ping() error {
 	}
 	c.connMutex.RUnlock()
 
-	c.logDebug("Sending PING")
+	c.logDebug("sending PING")
 
 	pingFrame := protocol.NewFrame(protocol.FRAME_TYPE_PING, c.getNextSequence(), nil)
 	if err := c.writeFrame(pingFrame); err != nil {
@@ -168,7 +223,7 @@ func (c *Client) Ping() error {
 		return fmt.Errorf("expected PONG, got frame type %d", pongFrame.Type)
 	}
 
-	c.logDebug("Received PONG")
+	c.logDebug("received PONG")
 
 	return nil
 }
@@ -197,98 +252,7 @@ func (c *Client) readFrame() (*protocol.Frame, error) {
 	if err := c.conn.SetReadDeadline(time.Now().Add(c.config.ReadTimeout)); err != nil {
 		return nil, err
 	}
-
-	// Read until we find STX
-	for {
-		b, err := c.reader.ReadByte()
-		if err != nil {
-			return nil, err
-		}
-		if b == protocol.STX {
-			break
-		}
-	}
-
-	// Read MAGIC
-	magic := make([]byte, 2)
-	if _, err := io.ReadFull(c.reader, magic); err != nil {
-		return nil, err
-	}
-	if string(magic) != protocol.MAGIC {
-		return nil, fmt.Errorf("invalid magic bytes: %v", magic)
-	}
-
-	// Read version
-	version, err := c.reader.ReadByte()
-	if err != nil {
-		return nil, err
-	}
-
-	// Read length (2 bytes)
-	lengthBytes := make([]byte, 2)
-	if _, err := io.ReadFull(c.reader, lengthBytes); err != nil {
-		return nil, err
-	}
-	payloadLen := int(lengthBytes[0])<<8 | int(lengthBytes[1])
-
-	// Read type
-	frameType, err := c.reader.ReadByte()
-	if err != nil {
-		return nil, err
-	}
-
-	// Read sequence (2 bytes)
-	seqBytes := make([]byte, 2)
-	if _, err := io.ReadFull(c.reader, seqBytes); err != nil {
-		return nil, err
-	}
-	sequence := uint16(seqBytes[0])<<8 | uint16(seqBytes[1])
-
-	// Read flags
-	_, err = c.reader.ReadByte()
-	if err != nil {
-		return nil, err
-	}
-
-	// Read payload
-	payload := make([]byte, payloadLen)
-	if payloadLen > 0 {
-		if _, err := io.ReadFull(c.reader, payload); err != nil {
-			return nil, err
-		}
-	}
-
-	// Read CRC32 (4 bytes)
-	crcBytes := make([]byte, 4)
-	if _, err := io.ReadFull(c.reader, crcBytes); err != nil {
-		return nil, err
-	}
-	crc32Value := uint32(crcBytes[0])<<24 | uint32(crcBytes[1])<<16 |
-		uint32(crcBytes[2])<<8 | uint32(crcBytes[3])
-
-	// Read ETX
-	etx, err := c.reader.ReadByte()
-	if err != nil {
-		return nil, err
-	}
-	if etx != protocol.ETX {
-		return nil, fmt.Errorf("invalid ETX byte: 0x%02x", etx)
-	}
-
-	frame := &protocol.Frame{
-		Version:  version,
-		Type:     frameType,
-		Sequence: sequence,
-		Payload:  payload,
-		CRC32:    crc32Value,
-	}
-
-	// Validate frame
-	if !frame.IsValid() {
-		return nil, fmt.Errorf("invalid frame: CRC mismatch")
-	}
-
-	return frame, nil
+	return protocol.ReadFrame(c.reader)
 }
 
 // getNextSequence returns the next sequence number
@@ -300,9 +264,9 @@ func (c *Client) getNextSequence() uint16 {
 }
 
 // logDebug logs a debug message if debug is enabled
-func (c *Client) logDebug(format string, args ...interface{}) {
+func (c *Client) logDebug(msg string, args ...any) {
 	if c.config.Debug {
-		log.Printf("[ECR CLIENT] "+format, args...)
+		c.logger.Debug(msg, args...)
 	}
 }
 

@@ -2,7 +2,12 @@
 
 package protocol
 
-import "hash/crc32"
+import (
+	"bufio"
+	"fmt"
+	"hash/crc32"
+	"io"
+)
 
 const NAME = "termwire"
 const VERSION = 1
@@ -135,4 +140,87 @@ func ParseFrame(data []byte) *Frame {
 	m.CRC32 = uint32(data[crcStart])<<24 | uint32(data[crcStart+1])<<16 | uint32(data[crcStart+2])<<8 | uint32(data[crcStart+3])
 
 	return m
+}
+
+// ReadFrame reads and validates a single frame from a buffered reader.
+// This is the canonical implementation shared by both client and server.
+func ReadFrame(reader *bufio.Reader) (*Frame, error) {
+	for {
+		b, err := reader.ReadByte()
+		if err != nil {
+			return nil, err
+		}
+		if b == STX {
+			break
+		}
+	}
+
+	magic := make([]byte, 2)
+	if _, err := io.ReadFull(reader, magic); err != nil {
+		return nil, err
+	}
+	if string(magic) != MAGIC {
+		return nil, fmt.Errorf("invalid magic bytes: %v", magic)
+	}
+
+	version, err := reader.ReadByte()
+	if err != nil {
+		return nil, err
+	}
+
+	lengthBytes := make([]byte, 2)
+	if _, err := io.ReadFull(reader, lengthBytes); err != nil {
+		return nil, err
+	}
+	payloadLen := int(lengthBytes[0])<<8 | int(lengthBytes[1])
+
+	frameType, err := reader.ReadByte()
+	if err != nil {
+		return nil, err
+	}
+
+	seqBytes := make([]byte, 2)
+	if _, err := io.ReadFull(reader, seqBytes); err != nil {
+		return nil, err
+	}
+	sequence := uint16(seqBytes[0])<<8 | uint16(seqBytes[1])
+
+	if _, err = reader.ReadByte(); err != nil { // FLAGS — reserved
+		return nil, err
+	}
+
+	payload := make([]byte, payloadLen)
+	if payloadLen > 0 {
+		if _, err := io.ReadFull(reader, payload); err != nil {
+			return nil, err
+		}
+	}
+
+	crcBytes := make([]byte, 4)
+	if _, err := io.ReadFull(reader, crcBytes); err != nil {
+		return nil, err
+	}
+	crc32Value := uint32(crcBytes[0])<<24 | uint32(crcBytes[1])<<16 | uint32(crcBytes[2])<<8 | uint32(crcBytes[3])
+
+	etx, err := reader.ReadByte()
+	if err != nil {
+		return nil, err
+	}
+	if etx != ETX {
+		return nil, fmt.Errorf("invalid ETX byte: 0x%02x", etx)
+	}
+
+	frame := &Frame{
+		Version:  version,
+		Type:     frameType,
+		Sequence: sequence,
+		Payload:  payload,
+		CRC32:    crc32Value,
+	}
+
+	if !frame.IsValid() {
+		return nil, fmt.Errorf("invalid frame: CRC mismatch")
+	}
+
+	return frame, nil
 }

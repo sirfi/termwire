@@ -15,6 +15,10 @@ func main() {
 	config := ecr.DefaultConfig().
 		WithPOSAddress("localhost", 8080).
 		WithDebug(true)
+	config.TLSEnabled = true
+	config.TLSCAFile = "certs/ca.crt"
+	config.TLSCertFile = "certs/client.crt"
+	config.TLSKeyFile = "certs/client.key"
 
 	// Create API instance
 	api := ecr.NewAPI(config)
@@ -53,9 +57,9 @@ func main() {
 	fmt.Println("Transaction ID: TXN-SIMPLE-001")
 
 	result, err := paymentFlow.ExecuteSimplePayment(
-		"TXN-SIMPLE-001",  // Transaction ID
-		15000,             // Amount in cents (150.00 TRY)
-		"TRY",             // Currency
+		"TXN-SIMPLE-001", // Transaction ID
+		15000,            // Amount in cents (150.00 TRY)
+		"TRY",            // Currency
 	)
 
 	if err != nil {

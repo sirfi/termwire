@@ -1,6 +1,9 @@
 package ecr
 
-import "time"
+import (
+	"log/slog"
+	"time"
+)
 
 // Config holds the ECR client configuration
 type Config struct {
@@ -25,8 +28,16 @@ type Config struct {
 	DefaultCurrency string
 	EnableLoyalty   bool
 
+	// TLS configuration (optional — leave empty to use plain TCP)
+	TLSEnabled    bool
+	TLSCAFile     string // CA cert to verify the server certificate
+	TLSCertFile   string // client certificate for mTLS (optional)
+	TLSKeyFile    string // client private key for mTLS (optional)
+	TLSServerName string // SNI / server name override (defaults to POSHost)
+
 	// Logging
-	Debug bool
+	Debug    bool
+	LogLevel slog.Level
 }
 
 // DefaultConfig returns a default ECR configuration
@@ -44,6 +55,8 @@ func DefaultConfig() *Config {
 		DefaultCurrency: "TRY",
 		EnableLoyalty:   true,
 		Debug:           false,
+		TLSEnabled:      false,
+		LogLevel:        slog.LevelInfo,
 	}
 }
 

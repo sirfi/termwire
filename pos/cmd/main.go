@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"log"
+	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
@@ -12,9 +12,6 @@ import (
 )
 
 func main() {
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	log.Println("=== Termwire POS Terminal ===")
-
 	// Load configuration
 	config := pos.DefaultConfig()
 
@@ -28,48 +25,56 @@ func main() {
 	if terminalID := os.Getenv("POS_TERMINAL_ID"); terminalID != "" {
 		config.TerminalID = terminalID
 	}
+	if os.Getenv("POS_TLS_ENABLED") == "true" {
+		config.TLSEnabled = true
+		config.TLSCertFile = getEnv("POS_TLS_CERT", "certs/server.crt")
+		config.TLSKeyFile = getEnv("POS_TLS_KEY", "certs/server.key")
+		config.TLSCAFile = getEnv("POS_TLS_CA", "certs/ca.crt")
+	}
 
-	log.Printf("Configuration:")
-	log.Printf("  Terminal ID: %s", config.TerminalID)
-	log.Printf("  Serial Number: %s", config.SerialNumber)
-	log.Printf("  Version: %s", config.Version)
-	log.Printf("  Address: %s:%d", config.Host, config.Port)
-	log.Printf("  Max Transaction: %.2f", float64(config.MaxTransactionAmount)/100.0)
+	logger := slog.New(slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{Level: config.LogLevel}))
+	logger.Info("starting Termwire POS terminal",
+		slog.String("terminal_id", config.TerminalID),
+		slog.String("serial", config.SerialNumber),
+		slog.String("version", config.Version),
+		slog.String("addr", fmt.Sprintf("%s:%d", config.Host, config.Port)),
+		slog.Bool("tls", config.TLSEnabled),
+	)
 
 	// Create and start server
 	server := pos.NewServer(config)
 	if err := server.Start(); err != nil {
-		log.Fatalf("Failed to start server: %v", err)
+		logger.Error("failed to start server", slog.Any("error", err))
+		os.Exit(1)
 	}
 
-	log.Println("POS terminal is ready to accept connections...")
-	log.Println("Press Ctrl+C to stop")
+	logger.Info("POS terminal ready — press Ctrl+C to stop")
 
 	// Wait for interrupt signal
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
 
-	// Print statistics periodically
-	go printStatsPeriodically(server)
+	go printStatsPeriodically(server, logger)
 
 	<-sigChan
-	log.Println("\nReceived shutdown signal")
-
-	// Stop server
+	logger.Info("received shutdown signal")
 	server.Stop()
-
-	log.Println("POS terminal shutdown complete")
+	logger.Info("POS terminal shutdown complete")
 }
 
-func printStatsPeriodically(server *pos.Server) {
+func printStatsPeriodically(server *pos.Server, logger *slog.Logger) {
 	ticker := time.NewTicker(60 * time.Second)
 	defer ticker.Stop()
 
 	for range ticker.C {
 		stats := server.GetStats()
-		log.Println("[STATS] === Server Statistics ===")
-		for k, v := range stats {
-			log.Printf("[STATS]   %s: %v", k, v)
-		}
+		logger.Info("server statistics", slog.Any("stats", stats))
 	}
+}
+
+func getEnv(key, fallback string) string {
+	if v := os.Getenv(key); v != "" {
+		return v
+	}
+	return fallback
 }

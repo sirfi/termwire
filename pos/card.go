@@ -57,17 +57,25 @@ var mockBankApplications = []*pb.BankApplication{
 	},
 }
 
-// CardReader simulates a card reader device
-type CardReader struct {
+// CardReader is the interface for card reader hardware.
+// Implementations can be the simulated reader (SimulatedCardReader) or real hardware drivers.
+type CardReader interface {
+	SimulateCardInsertion() *CardData
+	GetCurrentCard() *CardData
+	RemoveCard()
+}
+
+// SimulatedCardReader simulates a card reader device
+type SimulatedCardReader struct {
 	currentCard *CardData
 }
 
-func NewCardReader() *CardReader {
-	return &CardReader{}
+func NewCardReader() CardReader {
+	return &SimulatedCardReader{}
 }
 
 // SimulateCardInsertion simulates a card being inserted
-func (cr *CardReader) SimulateCardInsertion() *CardData {
+func (cr *SimulatedCardReader) SimulateCardInsertion() *CardData {
 	// Generate random card data
 	cardNumber := fmt.Sprintf("5406%012d", rand.Intn(1000000000000))
 	maskedNumber := fmt.Sprintf("540600******%s", cardNumber[len(cardNumber)-4:])
@@ -94,12 +102,12 @@ func (cr *CardReader) SimulateCardInsertion() *CardData {
 }
 
 // GetCurrentCard returns the currently inserted card
-func (cr *CardReader) GetCurrentCard() *CardData {
+func (cr *SimulatedCardReader) GetCurrentCard() *CardData {
 	return cr.currentCard
 }
 
 // RemoveCard simulates card removal
-func (cr *CardReader) RemoveCard() {
+func (cr *SimulatedCardReader) RemoveCard() {
 	cr.currentCard = nil
 }
 

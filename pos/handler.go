@@ -2,7 +2,7 @@ package pos
 
 import (
 	"fmt"
-	"log"
+	"log/slog"
 	"math/rand"
 	"time"
 
@@ -13,7 +13,8 @@ import (
 type MessageHandler struct {
 	config     *Config
 	txnManager *TransactionManager
-	cardReader *CardReader
+	cardReader CardReader
+	logger     *slog.Logger
 }
 
 // NewMessageHandler creates a new message handler
@@ -22,12 +23,13 @@ func NewMessageHandler(config *Config) *MessageHandler {
 		config:     config,
 		txnManager: NewTransactionManager(config),
 		cardReader: NewCardReader(),
+		logger:     slog.Default(),
 	}
 }
 
 // HandleMessage processes an incoming message and returns a response
 func (h *MessageHandler) HandleMessage(msg *pb.Message) (*pb.Message, error) {
-	log.Printf("[HANDLER] Processing message ID: %s, Type: %T", msg.MessageId, msg.Body)
+	h.logger.Info("processing message", slog.String("message_id", msg.MessageId))
 
 	switch body := msg.Body.(type) {
 	case *pb.Message_GetVersionRequest:
@@ -63,158 +65,160 @@ func (h *MessageHandler) HandleMessage(msg *pb.Message) (*pb.Message, error) {
 	}
 }
 
-// handleGetVersion handles version request
 func (h *MessageHandler) handleGetVersion(msg *pb.Message) (*pb.Message, error) {
-	response := &pb.GetVersionResponse{
-		Code:    "00",
-		Version: h.config.Version,
-	}
-
 	return &pb.Message{
 		MessageId: generateMessageID(),
 		Timestamp: time.Now().Format(time.RFC3339),
 		Body: &pb.Message_GetVersionResponse{
-			GetVersionResponse: response,
+			GetVersionResponse: &pb.GetVersionResponse{Code: "00", Version: h.config.Version},
 		},
 	}, nil
 }
 
-// handleGetTerminalInfo handles terminal info request
 func (h *MessageHandler) handleGetTerminalInfo(msg *pb.Message) (*pb.Message, error) {
-	response := &pb.GetTerminalInfoResponse{
-		Code:         "00",
-		Version:      h.config.Version,
-		SerialNumber: h.config.SerialNumber,
-	}
-
 	return &pb.Message{
 		MessageId: generateMessageID(),
 		Timestamp: time.Now().Format(time.RFC3339),
 		Body: &pb.Message_GetTerminalInfoResponse{
-			GetTerminalInfoResponse: response,
+			GetTerminalInfoResponse: &pb.GetTerminalInfoResponse{
+				Code:         "00",
+				Version:      h.config.Version,
+				SerialNumber: h.config.SerialNumber,
+			},
 		},
 	}, nil
 }
 
-// handleGetBanks handles banks request
 func (h *MessageHandler) handleGetBanks(msg *pb.Message) (*pb.Message, error) {
-	response := &pb.GetBanksResponse{
-		Code:  "00",
-		Banks: GetBanks(),
-	}
-
 	return &pb.Message{
 		MessageId: generateMessageID(),
 		Timestamp: time.Now().Format(time.RFC3339),
 		Body: &pb.Message_GetBanksResponse{
-			GetBanksResponse: response,
+			GetBanksResponse: &pb.GetBanksResponse{Code: "00", Banks: GetBanks()},
 		},
 	}, nil
 }
 
-// handleCardInsertion handles card insertion request
 func (h *MessageHandler) handleCardInsertion(msg *pb.Message, req *pb.CardInsertionRequest) (*pb.Message, error) {
-	log.Printf("[HANDLER] Card insertion request - Amount: %d %s, TxnID: %s",
-		req.TransactionAmountCents, req.Currency, req.TransactionId)
+	h.logger.Info("card insertion request",
+		slog.String("transaction_id", req.TransactionId),
+		slog.Uint64("amount_cents", uint64(req.TransactionAmountCents)),
+		slog.String("currency", req.Currency),
+	)
 
-	// Create transaction
 	_, err := h.txnManager.CreateTransaction(req.TransactionId, req.TransactionAmountCents, req.Currency)
 	if err != nil {
 		return h.createErrorResponse(msg.MessageId, "01", err.Error()), nil
 	}
 
-	// Simulate card insertion
 	card := h.cardReader.SimulateCardInsertion()
 	h.txnManager.SetCardData(req.TransactionId, card)
 	h.txnManager.UpdateTransactionState(req.TransactionId, StateBankSelection)
 
-	log.Printf("[HANDLER] Card inserted - Number: %s, Holder: %s, Banks: %d",
-		card.MaskedNumber, card.HolderName, len(card.AvailableBanks))
-
-	response := &pb.CardInsertionResponse{
-		Code:             "00",
-		CardNumberMasked: card.MaskedNumber,
-		CardHolderName:   card.HolderName,
-		AvailableBanks:   card.AvailableBanks,
-		Message:          "Card read successfully. Please select bank.",
-	}
+	h.logger.Info("card inserted",
+		slog.String("transaction_id", req.TransactionId),
+		slog.String("masked_number", card.MaskedNumber),
+		slog.Int("bank_count", len(card.AvailableBanks)),
+	)
 
 	return &pb.Message{
 		MessageId: generateMessageID(),
 		Timestamp: time.Now().Format(time.RFC3339),
 		Body: &pb.Message_CardInsertionResponse{
-			CardInsertionResponse: response,
+			CardInsertionResponse: &pb.CardInsertionResponse{
+				Code:             "00",
+				CardNumberMasked: card.MaskedNumber,
+				CardHolderName:   card.HolderName,
+				AvailableBanks:   card.AvailableBanks,
+				Message:          "Card read successfully. Please select bank.",
+			},
 		},
 	}, nil
 }
 
-// handlePaymentProcessing handles payment processing request
 func (h *MessageHandler) handlePaymentProcessing(msg *pb.Message, req *pb.PaymentProcessingRequest) (*pb.Message, error) {
-	log.Printf("[HANDLER] Payment processing - TxnID: %s, BankID: %d, UseLoyalty: %v",
-		req.TransactionId, req.SelectedBankId, req.UseLoyaltyPoints)
+	h.logger.Info("payment processing",
+		slog.String("transaction_id", req.TransactionId),
+		slog.Uint64("bank_id", uint64(req.SelectedBankId)),
+		slog.Bool("use_loyalty", req.UseLoyaltyPoints),
+	)
+
+	// Idempotency: return cached result if already completed.
+	if completed := h.txnManager.GetCompletedTransactionByID(req.TransactionId); completed != nil && completed.CachedResponse != nil {
+		h.logger.Info("idempotent response", slog.String("transaction_id", req.TransactionId))
+		return &pb.Message{
+			MessageId: generateMessageID(),
+			Timestamp: time.Now().Format(time.RFC3339),
+			Body:      &pb.Message_PaymentCompletionResponse{PaymentCompletionResponse: completed.CachedResponse},
+		}, nil
+	}
 
 	txn, err := h.txnManager.GetTransaction(req.TransactionId)
 	if err != nil {
 		return h.createErrorResponse(msg.MessageId, "02", err.Error()), nil
 	}
 
-	// Set bank selection
 	h.txnManager.SetBankSelection(req.TransactionId, req.SelectedBankId, req.SelectedAid, req.InstallmentCount)
 
-	// Check if loyalty card inquiry is needed
 	if req.UseLoyaltyPoints && txn.Card != nil && txn.Card.HasLoyaltyCard {
 		h.txnManager.UpdateTransactionState(req.TransactionId, StateLoyaltyInquiry)
 
-		log.Printf("[HANDLER] Loyalty inquiry - Points: %d, Value: %d cents",
-			txn.Card.LoyaltyPoints, txn.Card.PointsValueCents)
-
-		response := &pb.LoyaltyCardInquiryResponse{
-			Code:              "00",
-			AvailablePoints:   txn.Card.LoyaltyPoints,
-			PointsValueCents:  txn.Card.PointsValueCents,
-			LoyaltyCardNumber: fmt.Sprintf("LOY-%s", txn.Card.MaskedNumber[len(txn.Card.MaskedNumber)-4:]),
-			Message: fmt.Sprintf("You have %d loyalty points available (worth %.2f %s)",
-				txn.Card.LoyaltyPoints, float64(txn.Card.PointsValueCents)/100.0, txn.Currency),
-		}
+		h.logger.Info("loyalty inquiry",
+			slog.String("transaction_id", req.TransactionId),
+			slog.Uint64("available_points", uint64(txn.Card.LoyaltyPoints)),
+			slog.Uint64("value_cents", uint64(txn.Card.PointsValueCents)),
+		)
 
 		return &pb.Message{
 			MessageId: generateMessageID(),
 			Timestamp: time.Now().Format(time.RFC3339),
 			Body: &pb.Message_LoyaltyCardInquiryResponse{
-				LoyaltyCardInquiryResponse: response,
+				LoyaltyCardInquiryResponse: &pb.LoyaltyCardInquiryResponse{
+					Code:              "00",
+					AvailablePoints:   txn.Card.LoyaltyPoints,
+					PointsValueCents:  txn.Card.PointsValueCents,
+					LoyaltyCardNumber: fmt.Sprintf("LOY-%s", txn.Card.MaskedNumber[len(txn.Card.MaskedNumber)-4:]),
+					Message: fmt.Sprintf("You have %d loyalty points available (worth %.2f %s)",
+						txn.Card.LoyaltyPoints, float64(txn.Card.PointsValueCents)/100.0, txn.Currency),
+				},
 			},
 		}, nil
 	}
 
-	// No loyalty, proceed directly to payment completion
 	return h.processPayment(txn)
 }
 
-// handleLoyaltyConfirmation handles loyalty points confirmation
 func (h *MessageHandler) handleLoyaltyConfirmation(msg *pb.Message, req *pb.LoyaltyPointsConfirmation) (*pb.Message, error) {
-	log.Printf("[HANDLER] Loyalty confirmation - TxnID: %s, Points: %d, Value: %d cents",
-		req.TransactionId, req.PointsToUse, req.PointsValueCents)
+	h.logger.Info("loyalty confirmation",
+		slog.String("transaction_id", req.TransactionId),
+		slog.Uint64("points_to_use", uint64(req.PointsToUse)),
+		slog.Uint64("value_cents", uint64(req.PointsValueCents)),
+	)
+
+	// Idempotency: return cached result if already completed.
+	if completed := h.txnManager.GetCompletedTransactionByID(req.TransactionId); completed != nil && completed.CachedResponse != nil {
+		h.logger.Info("idempotent response", slog.String("transaction_id", req.TransactionId))
+		return &pb.Message{
+			MessageId: generateMessageID(),
+			Timestamp: time.Now().Format(time.RFC3339),
+			Body:      &pb.Message_PaymentCompletionResponse{PaymentCompletionResponse: completed.CachedResponse},
+		}, nil
+	}
 
 	txn, err := h.txnManager.GetTransaction(req.TransactionId)
 	if err != nil {
 		return h.createErrorResponse(msg.MessageId, "02", err.Error()), nil
 	}
 
-	// Set loyalty points usage
 	h.txnManager.SetLoyaltyPoints(req.TransactionId, true, req.PointsToUse, req.PointsValueCents)
-
-	// Process payment with loyalty points
 	return h.processPayment(txn)
 }
 
-// processPayment processes the actual payment
 func (h *MessageHandler) processPayment(txn *Transaction) (*pb.Message, error) {
 	h.txnManager.UpdateTransactionState(txn.ID, StatePaymentProcessing)
 
-	// Simulate payment processing delay
 	time.Sleep(1 * time.Second)
 
-	// Simulate bank authorization (90% success rate)
 	success := rand.Intn(100) < 90
 
 	if !success {
@@ -222,19 +226,13 @@ func (h *MessageHandler) processPayment(txn *Transaction) (*pb.Message, error) {
 		return h.createErrorResponse(txn.ID, "05", "Payment declined by issuer"), nil
 	}
 
-	// Generate confirmation codes
 	confirmationCode := fmt.Sprintf("CONF-%d", time.Now().Unix())
 	authCode := fmt.Sprintf("AUTH-%06d", rand.Intn(1000000))
 
-	// Complete transaction
 	h.txnManager.CompleteTransaction(txn.ID, confirmationCode, authCode)
 
-	// Reload transaction to get updated values
-	txn, _ = h.txnManager.GetTransaction(txn.ID)
-	if txn == nil {
-		// Transaction was moved to completed, fetch from manager
-		txn = h.txnManager.completedTransactions[len(h.txnManager.completedTransactions)-1]
-	}
+	// Transaction was moved to completed after CompleteTransaction; retrieve it safely.
+	txn = h.txnManager.GetCompletedTransactionByID(txn.ID)
 
 	cardAmountCents := txn.AmountCents - txn.LoyaltyAmountCents
 	remainingPoints := uint32(0)
@@ -242,8 +240,12 @@ func (h *MessageHandler) processPayment(txn *Transaction) (*pb.Message, error) {
 		remainingPoints = txn.Card.LoyaltyPoints - txn.LoyaltyPointsUsed
 	}
 
-	log.Printf("[HANDLER] Payment completed - TxnID: %s, Confirmation: %s, Auth: %s",
-		txn.ID, confirmationCode, authCode)
+	h.logger.Info("payment completed",
+		slog.String("transaction_id", txn.ID),
+		slog.String("confirmation_code", confirmationCode),
+		slog.String("auth_code", authCode),
+		slog.String("receipt_number", txn.ReceiptNumber),
+	)
 
 	response := &pb.PaymentCompletionResponse{
 		Code:               "00",
@@ -258,6 +260,9 @@ func (h *MessageHandler) processPayment(txn *Transaction) (*pb.Message, error) {
 		InstallmentCount:   txn.InstallmentCount,
 	}
 
+	// Cache for idempotent retries.
+	txn.CachedResponse = response
+
 	return &pb.Message{
 		MessageId: generateMessageID(),
 		Timestamp: time.Now().Format(time.RFC3339),
@@ -267,10 +272,12 @@ func (h *MessageHandler) processPayment(txn *Transaction) (*pb.Message, error) {
 	}, nil
 }
 
-// handlePaymentCompletion handles payment completion request (alternative flow)
 func (h *MessageHandler) handlePaymentCompletion(msg *pb.Message, req *pb.PaymentCompletionRequest) (*pb.Message, error) {
-	log.Printf("[HANDLER] Payment completion request - TxnID: %s, Total: %d %s",
-		req.TransactionId, req.TotalAmountCents, req.Currency)
+	h.logger.Info("payment completion request",
+		slog.String("transaction_id", req.TransactionId),
+		slog.Uint64("total_cents", uint64(req.TotalAmountCents)),
+		slog.String("currency", req.Currency),
+	)
 
 	txn, err := h.txnManager.GetTransaction(req.TransactionId)
 	if err != nil {
@@ -280,10 +287,12 @@ func (h *MessageHandler) handlePaymentCompletion(msg *pb.Message, req *pb.Paymen
 	return h.processPayment(txn)
 }
 
-// handleRefund handles refund transaction request
 func (h *MessageHandler) handleRefund(msg *pb.Message, req *pb.RefundTransactionRequest) (*pb.Message, error) {
-	log.Printf("[HANDLER] Refund request - OriginalTxnID: %s, Amount: %d %s",
-		req.OriginalTransactionId, req.RefundAmountCents, req.Currency)
+	h.logger.Info("refund request",
+		slog.String("original_transaction_id", req.OriginalTransactionId),
+		slog.Uint64("refund_amount_cents", uint64(req.RefundAmountCents)),
+		slog.String("currency", req.Currency),
+	)
 
 	_, err := h.txnManager.RefundTransaction(req.OriginalTransactionId, req.RefundAmountCents)
 	if err != nil {
@@ -293,31 +302,30 @@ func (h *MessageHandler) handleRefund(msg *pb.Message, req *pb.RefundTransaction
 	refundTxnID := fmt.Sprintf("RFD-%s-%d", req.OriginalTransactionId, time.Now().Unix())
 	confirmationCode := fmt.Sprintf("RFCONF-%d", time.Now().Unix())
 
-	log.Printf("[HANDLER] Refund completed - RefundTxnID: %s, Confirmation: %s",
-		refundTxnID, confirmationCode)
-
-	response := &pb.RefundTransactionResponse{
-		Code:              "00",
-		TransactionId:     refundTxnID,
-		RefundAmountCents: req.RefundAmountCents,
-		ConfirmationCode:  confirmationCode,
-		Message: fmt.Sprintf("Refund of %.2f %s completed successfully",
-			float64(req.RefundAmountCents)/100.0, req.Currency),
-		Currency: req.Currency,
-	}
+	h.logger.Info("refund completed",
+		slog.String("refund_transaction_id", refundTxnID),
+		slog.String("confirmation_code", confirmationCode),
+	)
 
 	return &pb.Message{
 		MessageId: generateMessageID(),
 		Timestamp: time.Now().Format(time.RFC3339),
 		Body: &pb.Message_RefundTransactionResponse{
-			RefundTransactionResponse: response,
+			RefundTransactionResponse: &pb.RefundTransactionResponse{
+				Code:              "00",
+				TransactionId:     refundTxnID,
+				RefundAmountCents: req.RefundAmountCents,
+				ConfirmationCode:  confirmationCode,
+				Message: fmt.Sprintf("Refund of %.2f %s completed successfully",
+					float64(req.RefundAmountCents)/100.0, req.Currency),
+				Currency: req.Currency,
+			},
 		},
 	}, nil
 }
 
-// handleVoid handles void transaction request
 func (h *MessageHandler) handleVoid(msg *pb.Message, req *pb.VoidTransactionRequest) (*pb.Message, error) {
-	log.Printf("[HANDLER] Void request - OriginalTxnID: %s", req.OriginalTransactionId)
+	h.logger.Info("void request", slog.String("original_transaction_id", req.OriginalTransactionId))
 
 	originalTxn, err := h.txnManager.VoidTransaction(req.OriginalTransactionId)
 	if err != nil {
@@ -327,65 +335,54 @@ func (h *MessageHandler) handleVoid(msg *pb.Message, req *pb.VoidTransactionRequ
 	voidTxnID := fmt.Sprintf("VOID-%s-%d", req.OriginalTransactionId, time.Now().Unix())
 	confirmationCode := fmt.Sprintf("VOIDCONF-%d", time.Now().Unix())
 
-	log.Printf("[HANDLER] Void completed - VoidTxnID: %s, Confirmation: %s",
-		voidTxnID, confirmationCode)
-
-	response := &pb.VoidTransactionResponse{
-		Code:             "00",
-		TransactionId:    voidTxnID,
-		ConfirmationCode: confirmationCode,
-		Message:          fmt.Sprintf("Transaction %s voided successfully", req.OriginalTransactionId),
-		Currency:         originalTxn.Currency,
-	}
+	h.logger.Info("void completed",
+		slog.String("void_transaction_id", voidTxnID),
+		slog.String("confirmation_code", confirmationCode),
+	)
 
 	return &pb.Message{
 		MessageId: generateMessageID(),
 		Timestamp: time.Now().Format(time.RFC3339),
 		Body: &pb.Message_VoidTransactionResponse{
-			VoidTransactionResponse: response,
+			VoidTransactionResponse: &pb.VoidTransactionResponse{
+				Code:             "00",
+				TransactionId:    voidTxnID,
+				ConfirmationCode: confirmationCode,
+				Message:          fmt.Sprintf("Transaction %s voided successfully", req.OriginalTransactionId),
+				Currency:         originalTxn.Currency,
+			},
 		},
 	}, nil
 }
 
-// handleXReport handles X report request
 func (h *MessageHandler) handleXReport(msg *pb.Message) (*pb.Message, error) {
-	log.Printf("[HANDLER] X Report request")
-
 	report := h.txnManager.GenerateXReport()
-
-	log.Printf("[HANDLER] X Report generated - Transactions: %d", report.TransactionCount)
-
+	h.logger.Info("X report generated", slog.Uint64("transaction_count", uint64(report.TransactionCount)))
 	return &pb.Message{
 		MessageId: generateMessageID(),
 		Timestamp: time.Now().Format(time.RFC3339),
-		Body: &pb.Message_XReportResponse{
-			XReportResponse: report,
-		},
+		Body:      &pb.Message_XReportResponse{XReportResponse: report},
 	}, nil
 }
 
-// handleZReport handles Z report request
 func (h *MessageHandler) handleZReport(msg *pb.Message) (*pb.Message, error) {
-	log.Printf("[HANDLER] Z Report request")
-
 	report := h.txnManager.GenerateZReport()
-
-	log.Printf("[HANDLER] Z Report generated - Transactions: %d, Z Number: %d",
-		report.TransactionCount, report.ZReportNumber)
-
+	h.logger.Info("Z report generated",
+		slog.Uint64("transaction_count", uint64(report.TransactionCount)),
+		slog.Uint64("z_report_number", uint64(report.ZReportNumber)),
+	)
 	return &pb.Message{
 		MessageId: generateMessageID(),
 		Timestamp: time.Now().Format(time.RFC3339),
-		Body: &pb.Message_ZReportResponse{
-			ZReportResponse: report,
-		},
+		Body:      &pb.Message_ZReportResponse{ZReportResponse: report},
 	}, nil
 }
 
-// handleDetailedReport handles detailed report request
 func (h *MessageHandler) handleDetailedReport(msg *pb.Message, req *pb.DetailedReportRequest) (*pb.Message, error) {
-	log.Printf("[HANDLER] Detailed report request - From: %s, To: %s",
-		req.FromTimestamp, req.ToTimestamp)
+	h.logger.Info("detailed report request",
+		slog.String("from", req.FromTimestamp),
+		slog.String("to", req.ToTimestamp),
+	)
 
 	fromTime, _ := time.Parse(time.RFC3339, req.FromTimestamp)
 	toTime, _ := time.Parse(time.RFC3339, req.ToTimestamp)
@@ -398,80 +395,67 @@ func (h *MessageHandler) handleDetailedReport(msg *pb.Message, req *pb.DetailedR
 	}
 
 	report := h.txnManager.GenerateDetailedReport(fromTime, toTime, req.Limit, req.IncludeVoids)
-
-	log.Printf("[HANDLER] Detailed report generated - Transactions: %d", len(report.Transactions))
+	h.logger.Info("detailed report generated", slog.Int("transaction_count", len(report.Transactions)))
 
 	return &pb.Message{
 		MessageId: generateMessageID(),
 		Timestamp: time.Now().Format(time.RFC3339),
-		Body: &pb.Message_DetailedReportResponse{
-			DetailedReportResponse: report,
-		},
+		Body:      &pb.Message_DetailedReportResponse{DetailedReportResponse: report},
 	}, nil
 }
 
-// handleGiftCardInquiry handles gift card inquiry request
 func (h *MessageHandler) handleGiftCardInquiry(msg *pb.Message, req *pb.GiftCardInquiryRequest) (*pb.Message, error) {
-	log.Printf("[HANDLER] Gift card inquiry - Card: %s", req.CardNumber)
+	h.logger.Info("gift card inquiry", slog.String("card_number", req.CardNumber))
 
-	// Simulate gift card balance (random between 0 and 50000 cents)
 	balance := uint32(rand.Intn(50000))
-
-	response := &pb.GiftCardInquiryResponse{
-		Code:         "00",
-		BalanceCents: balance,
-		Message:      fmt.Sprintf("Gift card balance: %.2f %s", float64(balance)/100.0, req.Currency),
-		Currency:     req.Currency,
-	}
 
 	return &pb.Message{
 		MessageId: generateMessageID(),
 		Timestamp: time.Now().Format(time.RFC3339),
 		Body: &pb.Message_GiftCardInquiryResponse{
-			GiftCardInquiryResponse: response,
+			GiftCardInquiryResponse: &pb.GiftCardInquiryResponse{
+				Code:         "00",
+				BalanceCents: balance,
+				Message:      fmt.Sprintf("Gift card balance: %.2f %s", float64(balance)/100.0, req.Currency),
+				Currency:     req.Currency,
+			},
 		},
 	}, nil
 }
 
-// handleGiftCardCharge handles gift card charge request
 func (h *MessageHandler) handleGiftCardCharge(msg *pb.Message, req *pb.GiftCardChargeRequest) (*pb.Message, error) {
-	log.Printf("[HANDLER] Gift card charge - Card: %s, Amount: %d %s",
-		req.CardNumber, req.AmountCents, req.Currency)
+	h.logger.Info("gift card charge",
+		slog.String("card_number", req.CardNumber),
+		slog.Uint64("amount_cents", uint64(req.AmountCents)),
+		slog.String("currency", req.Currency),
+	)
 
-	// Simulate gift card charge
-	newBalance := uint32(50000) - req.AmountCents // Assuming sufficient balance
-	pointsEarned := req.AmountCents / 100         // 1 point per 1 unit of currency
-
-	response := &pb.GiftCardChargeResponse{
-		Code:            "00",
-		NewBalanceCents: newBalance,
-		PointsEarned:    pointsEarned,
-		Message: fmt.Sprintf("Gift card charged successfully. New balance: %.2f %s",
-			float64(newBalance)/100.0, req.Currency),
-		Currency: req.Currency,
-	}
+	newBalance := uint32(50000) - req.AmountCents
+	pointsEarned := req.AmountCents / 100
 
 	return &pb.Message{
 		MessageId: generateMessageID(),
 		Timestamp: time.Now().Format(time.RFC3339),
 		Body: &pb.Message_GiftCardChargeResponse{
-			GiftCardChargeResponse: response,
+			GiftCardChargeResponse: &pb.GiftCardChargeResponse{
+				Code:            "00",
+				NewBalanceCents: newBalance,
+				PointsEarned:    pointsEarned,
+				Message: fmt.Sprintf("Gift card charged successfully. New balance: %.2f %s",
+					float64(newBalance)/100.0, req.Currency),
+				Currency: req.Currency,
+			},
 		},
 	}, nil
 }
 
-// createErrorResponse creates an error response message
 func (h *MessageHandler) createErrorResponse(messageID, code, errorMsg string) *pb.Message {
-	log.Printf("[HANDLER] Error response - Code: %s, Message: %s", code, errorMsg)
-
+	h.logger.Error("error response", slog.String("code", code), slog.String("message", errorMsg))
 	return &pb.Message{
 		MessageId: generateMessageID(),
 		Timestamp: time.Now().Format(time.RFC3339),
 		Body: &pb.Message_ErrorResponse{
-			ErrorResponse: &pb.ErrorResponse{
-				Code:    code,
-				Message: errorMsg,
-			},
+			ErrorResponse: &pb.ErrorResponse{Code: code, Message: errorMsg},
 		},
 	}
 }

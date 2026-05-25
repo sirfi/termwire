@@ -1,6 +1,9 @@
 package pos
 
-import "time"
+import (
+	"log/slog"
+	"time"
+)
 
 type Config struct {
 	// Network configuration
@@ -21,6 +24,15 @@ type Config struct {
 	// Transaction settings
 	MaxTransactionAmount int // in cents
 	SupportedCurrencies  []string
+
+	// TLS configuration (optional — leave empty to use plain TCP)
+	TLSEnabled  bool
+	TLSCertFile string // server certificate (PEM)
+	TLSKeyFile  string // server private key (PEM)
+	TLSCAFile   string // CA certificate for mTLS client verification (optional)
+
+	// Logging
+	LogLevel slog.Level
 }
 
 func DefaultConfig() *Config {
@@ -36,5 +48,7 @@ func DefaultConfig() *Config {
 		IdleTimeout:          5 * time.Minute,
 		MaxTransactionAmount: 10000000, // 100,000.00
 		SupportedCurrencies:  []string{"TRY", "USD", "EUR"},
+		TLSEnabled:           false,
+		LogLevel:             slog.LevelInfo,
 	}
 }

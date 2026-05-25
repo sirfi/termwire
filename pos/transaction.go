@@ -69,6 +69,9 @@ type Transaction struct {
 	CreatedAt          time.Time
 	CompletedAt        *time.Time
 	LastUpdated        time.Time
+
+	// CachedResponse holds the serialized PaymentCompletionResponse for idempotent retries.
+	CachedResponse *pb.PaymentCompletionResponse
 }
 
 // TransactionManager manages active and historical transactions
@@ -145,6 +148,19 @@ func (tm *TransactionManager) GetTransaction(transactionID string) (*Transaction
 	}
 
 	return txn, nil
+}
+
+// GetCompletedTransactionByID retrieves a completed transaction by ID.
+func (tm *TransactionManager) GetCompletedTransactionByID(transactionID string) *Transaction {
+	tm.mu.RLock()
+	defer tm.mu.RUnlock()
+
+	for _, txn := range tm.completedTransactions {
+		if txn.ID == transactionID {
+			return txn
+		}
+	}
+	return nil
 }
 
 // UpdateTransactionState updates the state of a transaction
