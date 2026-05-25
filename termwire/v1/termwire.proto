@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package termwire;
+package termwire.v1;
 
 option csharp_namespace = "Sirfi.Termwire.Protocol";
 option go_package = "github.com/sirfi/termwire/protocol";

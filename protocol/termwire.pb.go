@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.11
 // 	protoc        v5.29.3
-// source: protocol/termwire.proto
+// source: termwire/v1/termwire.proto
 
 package protocol
 
@@ -60,11 +60,11 @@ func (x TransactionType) String() string {
 }
 
 func (TransactionType) Descriptor() protoreflect.EnumDescriptor {
-	return file_protocol_termwire_proto_enumTypes[0].Descriptor()
+	return file_termwire_v1_termwire_proto_enumTypes[0].Descriptor()
 }
 
 func (TransactionType) Type() protoreflect.EnumType {
-	return &file_protocol_termwire_proto_enumTypes[0]
+	return &file_termwire_v1_termwire_proto_enumTypes[0]
 }
 
 func (x TransactionType) Number() protoreflect.EnumNumber {
@@ -73,7 +73,7 @@ func (x TransactionType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use TransactionType.Descriptor instead.
 func (TransactionType) EnumDescriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{0}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{0}
 }
 
 type PaymentMethod int32
@@ -118,11 +118,11 @@ func (x PaymentMethod) String() string {
 }
 
 func (PaymentMethod) Descriptor() protoreflect.EnumDescriptor {
-	return file_protocol_termwire_proto_enumTypes[1].Descriptor()
+	return file_termwire_v1_termwire_proto_enumTypes[1].Descriptor()
 }
 
 func (PaymentMethod) Type() protoreflect.EnumType {
-	return &file_protocol_termwire_proto_enumTypes[1]
+	return &file_termwire_v1_termwire_proto_enumTypes[1]
 }
 
 func (x PaymentMethod) Number() protoreflect.EnumNumber {
@@ -131,7 +131,7 @@ func (x PaymentMethod) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use PaymentMethod.Descriptor instead.
 func (PaymentMethod) EnumDescriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{1}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{1}
 }
 
 type Message struct {
@@ -175,7 +175,7 @@ type Message struct {
 
 func (x *Message) Reset() {
 	*x = Message{}
-	mi := &file_protocol_termwire_proto_msgTypes[0]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -187,7 +187,7 @@ func (x *Message) String() string {
 func (*Message) ProtoMessage() {}
 
 func (x *Message) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[0]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -200,7 +200,7 @@ func (x *Message) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Message.ProtoReflect.Descriptor instead.
 func (*Message) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{0}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *Message) GetMessageId() string {
@@ -656,7 +656,7 @@ type GetVersionRequest struct {
 
 func (x *GetVersionRequest) Reset() {
 	*x = GetVersionRequest{}
-	mi := &file_protocol_termwire_proto_msgTypes[1]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -668,7 +668,7 @@ func (x *GetVersionRequest) String() string {
 func (*GetVersionRequest) ProtoMessage() {}
 
 func (x *GetVersionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[1]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -681,7 +681,7 @@ func (x *GetVersionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetVersionRequest.ProtoReflect.Descriptor instead.
 func (*GetVersionRequest) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{1}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{1}
 }
 
 type GetVersionResponse struct {
@@ -694,7 +694,7 @@ type GetVersionResponse struct {
 
 func (x *GetVersionResponse) Reset() {
 	*x = GetVersionResponse{}
-	mi := &file_protocol_termwire_proto_msgTypes[2]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -706,7 +706,7 @@ func (x *GetVersionResponse) String() string {
 func (*GetVersionResponse) ProtoMessage() {}
 
 func (x *GetVersionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[2]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -719,7 +719,7 @@ func (x *GetVersionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetVersionResponse.ProtoReflect.Descriptor instead.
 func (*GetVersionResponse) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{2}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *GetVersionResponse) GetCode() string {
@@ -744,7 +744,7 @@ type GetTerminalInfoRequest struct {
 
 func (x *GetTerminalInfoRequest) Reset() {
 	*x = GetTerminalInfoRequest{}
-	mi := &file_protocol_termwire_proto_msgTypes[3]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -756,7 +756,7 @@ func (x *GetTerminalInfoRequest) String() string {
 func (*GetTerminalInfoRequest) ProtoMessage() {}
 
 func (x *GetTerminalInfoRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[3]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -769,7 +769,7 @@ func (x *GetTerminalInfoRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTerminalInfoRequest.ProtoReflect.Descriptor instead.
 func (*GetTerminalInfoRequest) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{3}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{3}
 }
 
 type GetTerminalInfoResponse struct {
@@ -783,7 +783,7 @@ type GetTerminalInfoResponse struct {
 
 func (x *GetTerminalInfoResponse) Reset() {
 	*x = GetTerminalInfoResponse{}
-	mi := &file_protocol_termwire_proto_msgTypes[4]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -795,7 +795,7 @@ func (x *GetTerminalInfoResponse) String() string {
 func (*GetTerminalInfoResponse) ProtoMessage() {}
 
 func (x *GetTerminalInfoResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[4]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -808,7 +808,7 @@ func (x *GetTerminalInfoResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTerminalInfoResponse.ProtoReflect.Descriptor instead.
 func (*GetTerminalInfoResponse) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{4}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *GetTerminalInfoResponse) GetCode() string {
@@ -840,7 +840,7 @@ type GetBanksRequest struct {
 
 func (x *GetBanksRequest) Reset() {
 	*x = GetBanksRequest{}
-	mi := &file_protocol_termwire_proto_msgTypes[5]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -852,7 +852,7 @@ func (x *GetBanksRequest) String() string {
 func (*GetBanksRequest) ProtoMessage() {}
 
 func (x *GetBanksRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[5]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -865,7 +865,7 @@ func (x *GetBanksRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetBanksRequest.ProtoReflect.Descriptor instead.
 func (*GetBanksRequest) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{5}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{5}
 }
 
 type Bank struct {
@@ -878,7 +878,7 @@ type Bank struct {
 
 func (x *Bank) Reset() {
 	*x = Bank{}
-	mi := &file_protocol_termwire_proto_msgTypes[6]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -890,7 +890,7 @@ func (x *Bank) String() string {
 func (*Bank) ProtoMessage() {}
 
 func (x *Bank) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[6]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -903,7 +903,7 @@ func (x *Bank) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Bank.ProtoReflect.Descriptor instead.
 func (*Bank) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{6}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *Bank) GetId() uint32 {
@@ -930,7 +930,7 @@ type GetBanksResponse struct {
 
 func (x *GetBanksResponse) Reset() {
 	*x = GetBanksResponse{}
-	mi := &file_protocol_termwire_proto_msgTypes[7]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -942,7 +942,7 @@ func (x *GetBanksResponse) String() string {
 func (*GetBanksResponse) ProtoMessage() {}
 
 func (x *GetBanksResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[7]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -955,7 +955,7 @@ func (x *GetBanksResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetBanksResponse.ProtoReflect.Descriptor instead.
 func (*GetBanksResponse) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{7}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *GetBanksResponse) GetCode() string {
@@ -986,7 +986,7 @@ type BankApplication struct {
 
 func (x *BankApplication) Reset() {
 	*x = BankApplication{}
-	mi := &file_protocol_termwire_proto_msgTypes[8]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -998,7 +998,7 @@ func (x *BankApplication) String() string {
 func (*BankApplication) ProtoMessage() {}
 
 func (x *BankApplication) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[8]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1011,7 +1011,7 @@ func (x *BankApplication) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BankApplication.ProtoReflect.Descriptor instead.
 func (*BankApplication) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{8}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *BankApplication) GetBankId() uint32 {
@@ -1067,7 +1067,7 @@ type CardInsertionRequest struct {
 
 func (x *CardInsertionRequest) Reset() {
 	*x = CardInsertionRequest{}
-	mi := &file_protocol_termwire_proto_msgTypes[9]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1079,7 +1079,7 @@ func (x *CardInsertionRequest) String() string {
 func (*CardInsertionRequest) ProtoMessage() {}
 
 func (x *CardInsertionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[9]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1092,7 +1092,7 @@ func (x *CardInsertionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CardInsertionRequest.ProtoReflect.Descriptor instead.
 func (*CardInsertionRequest) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{9}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *CardInsertionRequest) GetTransactionAmountCents() uint32 {
@@ -1129,7 +1129,7 @@ type CardInsertionResponse struct {
 
 func (x *CardInsertionResponse) Reset() {
 	*x = CardInsertionResponse{}
-	mi := &file_protocol_termwire_proto_msgTypes[10]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1141,7 +1141,7 @@ func (x *CardInsertionResponse) String() string {
 func (*CardInsertionResponse) ProtoMessage() {}
 
 func (x *CardInsertionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[10]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1154,7 +1154,7 @@ func (x *CardInsertionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CardInsertionResponse.ProtoReflect.Descriptor instead.
 func (*CardInsertionResponse) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{10}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *CardInsertionResponse) GetCode() string {
@@ -1205,7 +1205,7 @@ type PaymentProcessingRequest struct {
 
 func (x *PaymentProcessingRequest) Reset() {
 	*x = PaymentProcessingRequest{}
-	mi := &file_protocol_termwire_proto_msgTypes[11]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1217,7 +1217,7 @@ func (x *PaymentProcessingRequest) String() string {
 func (*PaymentProcessingRequest) ProtoMessage() {}
 
 func (x *PaymentProcessingRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[11]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1230,7 +1230,7 @@ func (x *PaymentProcessingRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PaymentProcessingRequest.ProtoReflect.Descriptor instead.
 func (*PaymentProcessingRequest) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{11}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *PaymentProcessingRequest) GetSelectedBankId() uint32 {
@@ -1281,7 +1281,7 @@ type LoyaltyCardInquiryResponse struct {
 
 func (x *LoyaltyCardInquiryResponse) Reset() {
 	*x = LoyaltyCardInquiryResponse{}
-	mi := &file_protocol_termwire_proto_msgTypes[12]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1293,7 +1293,7 @@ func (x *LoyaltyCardInquiryResponse) String() string {
 func (*LoyaltyCardInquiryResponse) ProtoMessage() {}
 
 func (x *LoyaltyCardInquiryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[12]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1306,7 +1306,7 @@ func (x *LoyaltyCardInquiryResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoyaltyCardInquiryResponse.ProtoReflect.Descriptor instead.
 func (*LoyaltyCardInquiryResponse) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{12}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *LoyaltyCardInquiryResponse) GetCode() string {
@@ -1355,7 +1355,7 @@ type LoyaltyPointsConfirmation struct {
 
 func (x *LoyaltyPointsConfirmation) Reset() {
 	*x = LoyaltyPointsConfirmation{}
-	mi := &file_protocol_termwire_proto_msgTypes[13]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1367,7 +1367,7 @@ func (x *LoyaltyPointsConfirmation) String() string {
 func (*LoyaltyPointsConfirmation) ProtoMessage() {}
 
 func (x *LoyaltyPointsConfirmation) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[13]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1380,7 +1380,7 @@ func (x *LoyaltyPointsConfirmation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoyaltyPointsConfirmation.ProtoReflect.Descriptor instead.
 func (*LoyaltyPointsConfirmation) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{13}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *LoyaltyPointsConfirmation) GetPointsToUse() uint32 {
@@ -1419,7 +1419,7 @@ type PaymentCompletionRequest struct {
 
 func (x *PaymentCompletionRequest) Reset() {
 	*x = PaymentCompletionRequest{}
-	mi := &file_protocol_termwire_proto_msgTypes[14]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1431,7 +1431,7 @@ func (x *PaymentCompletionRequest) String() string {
 func (*PaymentCompletionRequest) ProtoMessage() {}
 
 func (x *PaymentCompletionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[14]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1444,7 +1444,7 @@ func (x *PaymentCompletionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PaymentCompletionRequest.ProtoReflect.Descriptor instead.
 func (*PaymentCompletionRequest) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{14}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *PaymentCompletionRequest) GetBankId() uint32 {
@@ -1514,7 +1514,7 @@ type PaymentCompletionResponse struct {
 
 func (x *PaymentCompletionResponse) Reset() {
 	*x = PaymentCompletionResponse{}
-	mi := &file_protocol_termwire_proto_msgTypes[15]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1526,7 +1526,7 @@ func (x *PaymentCompletionResponse) String() string {
 func (*PaymentCompletionResponse) ProtoMessage() {}
 
 func (x *PaymentCompletionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[15]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1539,7 +1539,7 @@ func (x *PaymentCompletionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PaymentCompletionResponse.ProtoReflect.Descriptor instead.
 func (*PaymentCompletionResponse) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{15}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *PaymentCompletionResponse) GetCode() string {
@@ -1625,7 +1625,7 @@ type RefundTransactionRequest struct {
 
 func (x *RefundTransactionRequest) Reset() {
 	*x = RefundTransactionRequest{}
-	mi := &file_protocol_termwire_proto_msgTypes[16]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1637,7 +1637,7 @@ func (x *RefundTransactionRequest) String() string {
 func (*RefundTransactionRequest) ProtoMessage() {}
 
 func (x *RefundTransactionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[16]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1650,7 +1650,7 @@ func (x *RefundTransactionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RefundTransactionRequest.ProtoReflect.Descriptor instead.
 func (*RefundTransactionRequest) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{16}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *RefundTransactionRequest) GetOriginalTransactionId() string {
@@ -1702,7 +1702,7 @@ type RefundTransactionResponse struct {
 
 func (x *RefundTransactionResponse) Reset() {
 	*x = RefundTransactionResponse{}
-	mi := &file_protocol_termwire_proto_msgTypes[17]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1714,7 +1714,7 @@ func (x *RefundTransactionResponse) String() string {
 func (*RefundTransactionResponse) ProtoMessage() {}
 
 func (x *RefundTransactionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[17]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1727,7 +1727,7 @@ func (x *RefundTransactionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RefundTransactionResponse.ProtoReflect.Descriptor instead.
 func (*RefundTransactionResponse) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{17}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *RefundTransactionResponse) GetCode() string {
@@ -1784,7 +1784,7 @@ type VoidTransactionRequest struct {
 
 func (x *VoidTransactionRequest) Reset() {
 	*x = VoidTransactionRequest{}
-	mi := &file_protocol_termwire_proto_msgTypes[18]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1796,7 +1796,7 @@ func (x *VoidTransactionRequest) String() string {
 func (*VoidTransactionRequest) ProtoMessage() {}
 
 func (x *VoidTransactionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[18]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1809,7 +1809,7 @@ func (x *VoidTransactionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VoidTransactionRequest.ProtoReflect.Descriptor instead.
 func (*VoidTransactionRequest) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{18}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *VoidTransactionRequest) GetOriginalTransactionId() string {
@@ -1853,7 +1853,7 @@ type VoidTransactionResponse struct {
 
 func (x *VoidTransactionResponse) Reset() {
 	*x = VoidTransactionResponse{}
-	mi := &file_protocol_termwire_proto_msgTypes[19]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1865,7 +1865,7 @@ func (x *VoidTransactionResponse) String() string {
 func (*VoidTransactionResponse) ProtoMessage() {}
 
 func (x *VoidTransactionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[19]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1878,7 +1878,7 @@ func (x *VoidTransactionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VoidTransactionResponse.ProtoReflect.Descriptor instead.
 func (*VoidTransactionResponse) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{19}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *VoidTransactionResponse) GetCode() string {
@@ -1924,7 +1924,7 @@ type XReportRequest struct {
 
 func (x *XReportRequest) Reset() {
 	*x = XReportRequest{}
-	mi := &file_protocol_termwire_proto_msgTypes[20]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1936,7 +1936,7 @@ func (x *XReportRequest) String() string {
 func (*XReportRequest) ProtoMessage() {}
 
 func (x *XReportRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[20]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1949,7 +1949,7 @@ func (x *XReportRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use XReportRequest.ProtoReflect.Descriptor instead.
 func (*XReportRequest) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{20}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{20}
 }
 
 type XReportResponse struct {
@@ -1968,7 +1968,7 @@ type XReportResponse struct {
 
 func (x *XReportResponse) Reset() {
 	*x = XReportResponse{}
-	mi := &file_protocol_termwire_proto_msgTypes[21]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1980,7 +1980,7 @@ func (x *XReportResponse) String() string {
 func (*XReportResponse) ProtoMessage() {}
 
 func (x *XReportResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[21]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1993,7 +1993,7 @@ func (x *XReportResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use XReportResponse.ProtoReflect.Descriptor instead.
 func (*XReportResponse) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{21}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *XReportResponse) GetCode() string {
@@ -2060,7 +2060,7 @@ type ZReportRequest struct {
 
 func (x *ZReportRequest) Reset() {
 	*x = ZReportRequest{}
-	mi := &file_protocol_termwire_proto_msgTypes[22]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2072,7 +2072,7 @@ func (x *ZReportRequest) String() string {
 func (*ZReportRequest) ProtoMessage() {}
 
 func (x *ZReportRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[22]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2085,7 +2085,7 @@ func (x *ZReportRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ZReportRequest.ProtoReflect.Descriptor instead.
 func (*ZReportRequest) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{22}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{22}
 }
 
 type ZReportResponse struct {
@@ -2105,7 +2105,7 @@ type ZReportResponse struct {
 
 func (x *ZReportResponse) Reset() {
 	*x = ZReportResponse{}
-	mi := &file_protocol_termwire_proto_msgTypes[23]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2117,7 +2117,7 @@ func (x *ZReportResponse) String() string {
 func (*ZReportResponse) ProtoMessage() {}
 
 func (x *ZReportResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[23]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2130,7 +2130,7 @@ func (x *ZReportResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ZReportResponse.ProtoReflect.Descriptor instead.
 func (*ZReportResponse) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{23}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *ZReportResponse) GetCode() string {
@@ -2210,7 +2210,7 @@ type DetailedReportRequest struct {
 
 func (x *DetailedReportRequest) Reset() {
 	*x = DetailedReportRequest{}
-	mi := &file_protocol_termwire_proto_msgTypes[24]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2222,7 +2222,7 @@ func (x *DetailedReportRequest) String() string {
 func (*DetailedReportRequest) ProtoMessage() {}
 
 func (x *DetailedReportRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[24]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2235,7 +2235,7 @@ func (x *DetailedReportRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DetailedReportRequest.ProtoReflect.Descriptor instead.
 func (*DetailedReportRequest) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{24}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *DetailedReportRequest) GetFromTimestamp() string {
@@ -2283,9 +2283,9 @@ func (x *DetailedReportRequest) GetCurrency() string {
 type TransactionEntry struct {
 	state                 protoimpl.MessageState `protogen:"open.v1"`
 	TransactionId         string                 `protobuf:"bytes,1,opt,name=transaction_id,json=transactionId,proto3" json:"transaction_id,omitempty"`
-	Type                  TransactionType        `protobuf:"varint,2,opt,name=type,proto3,enum=termwire.TransactionType" json:"type,omitempty"`
+	Type                  TransactionType        `protobuf:"varint,2,opt,name=type,proto3,enum=termwire.v1.TransactionType" json:"type,omitempty"`
 	AmountCents           uint32                 `protobuf:"varint,3,opt,name=amount_cents,json=amountCents,proto3" json:"amount_cents,omitempty"`
-	PaymentMethod         PaymentMethod          `protobuf:"varint,4,opt,name=payment_method,json=paymentMethod,proto3,enum=termwire.PaymentMethod" json:"payment_method,omitempty"`
+	PaymentMethod         PaymentMethod          `protobuf:"varint,4,opt,name=payment_method,json=paymentMethod,proto3,enum=termwire.v1.PaymentMethod" json:"payment_method,omitempty"`
 	CardLastFour          string                 `protobuf:"bytes,5,opt,name=card_last_four,json=cardLastFour,proto3" json:"card_last_four,omitempty"`
 	LoyaltyAmountCents    uint32                 `protobuf:"varint,6,opt,name=loyalty_amount_cents,json=loyaltyAmountCents,proto3" json:"loyalty_amount_cents,omitempty"`
 	ConfirmationCode      string                 `protobuf:"bytes,7,opt,name=confirmation_code,json=confirmationCode,proto3" json:"confirmation_code,omitempty"`
@@ -2301,7 +2301,7 @@ type TransactionEntry struct {
 
 func (x *TransactionEntry) Reset() {
 	*x = TransactionEntry{}
-	mi := &file_protocol_termwire_proto_msgTypes[25]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2313,7 +2313,7 @@ func (x *TransactionEntry) String() string {
 func (*TransactionEntry) ProtoMessage() {}
 
 func (x *TransactionEntry) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[25]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2326,7 +2326,7 @@ func (x *TransactionEntry) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TransactionEntry.ProtoReflect.Descriptor instead.
 func (*TransactionEntry) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{25}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *TransactionEntry) GetTransactionId() string {
@@ -2432,7 +2432,7 @@ type DetailedReportResponse struct {
 
 func (x *DetailedReportResponse) Reset() {
 	*x = DetailedReportResponse{}
-	mi := &file_protocol_termwire_proto_msgTypes[26]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2444,7 +2444,7 @@ func (x *DetailedReportResponse) String() string {
 func (*DetailedReportResponse) ProtoMessage() {}
 
 func (x *DetailedReportResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[26]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2457,7 +2457,7 @@ func (x *DetailedReportResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DetailedReportResponse.ProtoReflect.Descriptor instead.
 func (*DetailedReportResponse) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{26}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *DetailedReportResponse) GetCode() string {
@@ -2499,7 +2499,7 @@ type CurrencyTotals struct {
 
 func (x *CurrencyTotals) Reset() {
 	*x = CurrencyTotals{}
-	mi := &file_protocol_termwire_proto_msgTypes[27]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2511,7 +2511,7 @@ func (x *CurrencyTotals) String() string {
 func (*CurrencyTotals) ProtoMessage() {}
 
 func (x *CurrencyTotals) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[27]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2524,7 +2524,7 @@ func (x *CurrencyTotals) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CurrencyTotals.ProtoReflect.Descriptor instead.
 func (*CurrencyTotals) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{27}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *CurrencyTotals) GetCurrency() string {
@@ -2550,7 +2550,7 @@ func (x *CurrencyTotals) GetCount() uint32 {
 
 type PaymentMethodTotals struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Method        PaymentMethod          `protobuf:"varint,1,opt,name=method,proto3,enum=termwire.PaymentMethod" json:"method,omitempty"`
+	Method        PaymentMethod          `protobuf:"varint,1,opt,name=method,proto3,enum=termwire.v1.PaymentMethod" json:"method,omitempty"`
 	Currency      string                 `protobuf:"bytes,2,opt,name=currency,proto3" json:"currency,omitempty"`
 	AmountCents   uint32                 `protobuf:"varint,3,opt,name=amount_cents,json=amountCents,proto3" json:"amount_cents,omitempty"`
 	Count         uint32                 `protobuf:"varint,4,opt,name=count,proto3" json:"count,omitempty"`
@@ -2560,7 +2560,7 @@ type PaymentMethodTotals struct {
 
 func (x *PaymentMethodTotals) Reset() {
 	*x = PaymentMethodTotals{}
-	mi := &file_protocol_termwire_proto_msgTypes[28]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2572,7 +2572,7 @@ func (x *PaymentMethodTotals) String() string {
 func (*PaymentMethodTotals) ProtoMessage() {}
 
 func (x *PaymentMethodTotals) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[28]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2585,7 +2585,7 @@ func (x *PaymentMethodTotals) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PaymentMethodTotals.ProtoReflect.Descriptor instead.
 func (*PaymentMethodTotals) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{28}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *PaymentMethodTotals) GetMethod() PaymentMethod {
@@ -2626,7 +2626,7 @@ type GiftCardInquiryRequest struct {
 
 func (x *GiftCardInquiryRequest) Reset() {
 	*x = GiftCardInquiryRequest{}
-	mi := &file_protocol_termwire_proto_msgTypes[29]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2638,7 +2638,7 @@ func (x *GiftCardInquiryRequest) String() string {
 func (*GiftCardInquiryRequest) ProtoMessage() {}
 
 func (x *GiftCardInquiryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[29]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2651,7 +2651,7 @@ func (x *GiftCardInquiryRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GiftCardInquiryRequest.ProtoReflect.Descriptor instead.
 func (*GiftCardInquiryRequest) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{29}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *GiftCardInquiryRequest) GetCardNumber() string {
@@ -2680,7 +2680,7 @@ type GiftCardInquiryResponse struct {
 
 func (x *GiftCardInquiryResponse) Reset() {
 	*x = GiftCardInquiryResponse{}
-	mi := &file_protocol_termwire_proto_msgTypes[30]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2692,7 +2692,7 @@ func (x *GiftCardInquiryResponse) String() string {
 func (*GiftCardInquiryResponse) ProtoMessage() {}
 
 func (x *GiftCardInquiryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[30]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2705,7 +2705,7 @@ func (x *GiftCardInquiryResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GiftCardInquiryResponse.ProtoReflect.Descriptor instead.
 func (*GiftCardInquiryResponse) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{30}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *GiftCardInquiryResponse) GetCode() string {
@@ -2748,7 +2748,7 @@ type GiftCardChargeRequest struct {
 
 func (x *GiftCardChargeRequest) Reset() {
 	*x = GiftCardChargeRequest{}
-	mi := &file_protocol_termwire_proto_msgTypes[31]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2760,7 +2760,7 @@ func (x *GiftCardChargeRequest) String() string {
 func (*GiftCardChargeRequest) ProtoMessage() {}
 
 func (x *GiftCardChargeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[31]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2773,7 +2773,7 @@ func (x *GiftCardChargeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GiftCardChargeRequest.ProtoReflect.Descriptor instead.
 func (*GiftCardChargeRequest) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{31}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *GiftCardChargeRequest) GetCardNumber() string {
@@ -2817,7 +2817,7 @@ type GiftCardChargeResponse struct {
 
 func (x *GiftCardChargeResponse) Reset() {
 	*x = GiftCardChargeResponse{}
-	mi := &file_protocol_termwire_proto_msgTypes[32]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2829,7 +2829,7 @@ func (x *GiftCardChargeResponse) String() string {
 func (*GiftCardChargeResponse) ProtoMessage() {}
 
 func (x *GiftCardChargeResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[32]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2842,7 +2842,7 @@ func (x *GiftCardChargeResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GiftCardChargeResponse.ProtoReflect.Descriptor instead.
 func (*GiftCardChargeResponse) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{32}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *GiftCardChargeResponse) GetCode() string {
@@ -2890,7 +2890,7 @@ type ErrorResponse struct {
 
 func (x *ErrorResponse) Reset() {
 	*x = ErrorResponse{}
-	mi := &file_protocol_termwire_proto_msgTypes[33]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2902,7 +2902,7 @@ func (x *ErrorResponse) String() string {
 func (*ErrorResponse) ProtoMessage() {}
 
 func (x *ErrorResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_protocol_termwire_proto_msgTypes[33]
+	mi := &file_termwire_v1_termwire_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2915,7 +2915,7 @@ func (x *ErrorResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ErrorResponse.ProtoReflect.Descriptor instead.
 func (*ErrorResponse) Descriptor() ([]byte, []int) {
-	return file_protocol_termwire_proto_rawDescGZIP(), []int{33}
+	return file_termwire_v1_termwire_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *ErrorResponse) GetCode() string {
@@ -2932,44 +2932,44 @@ func (x *ErrorResponse) GetMessage() string {
 	return ""
 }
 
-var File_protocol_termwire_proto protoreflect.FileDescriptor
+var File_termwire_v1_termwire_proto protoreflect.FileDescriptor
 
-const file_protocol_termwire_proto_rawDesc = "" +
+const file_termwire_v1_termwire_proto_rawDesc = "" +
 	"\n" +
-	"\x17protocol/termwire.proto\x12\btermwire\"\x98\x14\n" +
+	"\x1atermwire/v1/termwire.proto\x12\vtermwire.v1\"\xec\x14\n" +
 	"\aMessage\x12\x1d\n" +
 	"\n" +
 	"message_id\x18\x01 \x01(\tR\tmessageId\x12\x1c\n" +
-	"\ttimestamp\x18\x02 \x01(\tR\ttimestamp\x12M\n" +
+	"\ttimestamp\x18\x02 \x01(\tR\ttimestamp\x12P\n" +
 	"\x13get_version_request\x18\n" +
-	" \x01(\v2\x1b.termwire.GetVersionRequestH\x00R\x11getVersionRequest\x12P\n" +
-	"\x14get_version_response\x18\v \x01(\v2\x1c.termwire.GetVersionResponseH\x00R\x12getVersionResponse\x12]\n" +
-	"\x19get_terminal_info_request\x18\f \x01(\v2 .termwire.GetTerminalInfoRequestH\x00R\x16getTerminalInfoRequest\x12`\n" +
-	"\x1aget_terminal_info_response\x18\r \x01(\v2!.termwire.GetTerminalInfoResponseH\x00R\x17getTerminalInfoResponse\x12G\n" +
-	"\x11get_banks_request\x18\x14 \x01(\v2\x19.termwire.GetBanksRequestH\x00R\x0fgetBanksRequest\x12J\n" +
-	"\x12get_banks_response\x18\x15 \x01(\v2\x1a.termwire.GetBanksResponseH\x00R\x10getBanksResponse\x12V\n" +
-	"\x16card_insertion_request\x18\x1e \x01(\v2\x1e.termwire.CardInsertionRequestH\x00R\x14cardInsertionRequest\x12Y\n" +
-	"\x17card_insertion_response\x18\x1f \x01(\v2\x1f.termwire.CardInsertionResponseH\x00R\x15cardInsertionResponse\x12b\n" +
-	"\x1apayment_processing_request\x18  \x01(\v2\".termwire.PaymentProcessingRequestH\x00R\x18paymentProcessingRequest\x12i\n" +
-	"\x1dloyalty_card_inquiry_response\x18! \x01(\v2$.termwire.LoyaltyCardInquiryResponseH\x00R\x1aloyaltyCardInquiryResponse\x12e\n" +
-	"\x1bloyalty_points_confirmation\x18\" \x01(\v2#.termwire.LoyaltyPointsConfirmationH\x00R\x19loyaltyPointsConfirmation\x12b\n" +
-	"\x1apayment_completion_request\x18# \x01(\v2\".termwire.PaymentCompletionRequestH\x00R\x18paymentCompletionRequest\x12e\n" +
-	"\x1bpayment_completion_response\x18$ \x01(\v2#.termwire.PaymentCompletionResponseH\x00R\x19paymentCompletionResponse\x12b\n" +
-	"\x1arefund_transaction_request\x18* \x01(\v2\".termwire.RefundTransactionRequestH\x00R\x18refundTransactionRequest\x12e\n" +
-	"\x1brefund_transaction_response\x18+ \x01(\v2#.termwire.RefundTransactionResponseH\x00R\x19refundTransactionResponse\x12\\\n" +
-	"\x18void_transaction_request\x18, \x01(\v2 .termwire.VoidTransactionRequestH\x00R\x16voidTransactionRequest\x12_\n" +
-	"\x19void_transaction_response\x18- \x01(\v2!.termwire.VoidTransactionResponseH\x00R\x17voidTransactionResponse\x12D\n" +
-	"\x10x_report_request\x18< \x01(\v2\x18.termwire.XReportRequestH\x00R\x0exReportRequest\x12G\n" +
-	"\x11x_report_response\x18= \x01(\v2\x19.termwire.XReportResponseH\x00R\x0fxReportResponse\x12D\n" +
-	"\x10z_report_request\x18> \x01(\v2\x18.termwire.ZReportRequestH\x00R\x0ezReportRequest\x12G\n" +
-	"\x11z_report_response\x18? \x01(\v2\x19.termwire.ZReportResponseH\x00R\x0fzReportResponse\x12Y\n" +
-	"\x17detailed_report_request\x18@ \x01(\v2\x1f.termwire.DetailedReportRequestH\x00R\x15detailedReportRequest\x12\\\n" +
-	"\x18detailed_report_response\x18A \x01(\v2 .termwire.DetailedReportResponseH\x00R\x16detailedReportResponse\x12]\n" +
-	"\x19gift_card_inquiry_request\x18F \x01(\v2 .termwire.GiftCardInquiryRequestH\x00R\x16giftCardInquiryRequest\x12`\n" +
-	"\x1agift_card_inquiry_response\x18G \x01(\v2!.termwire.GiftCardInquiryResponseH\x00R\x17giftCardInquiryResponse\x12Z\n" +
-	"\x18gift_card_charge_request\x18H \x01(\v2\x1f.termwire.GiftCardChargeRequestH\x00R\x15giftCardChargeRequest\x12]\n" +
-	"\x19gift_card_charge_response\x18I \x01(\v2 .termwire.GiftCardChargeResponseH\x00R\x16giftCardChargeResponse\x12@\n" +
-	"\x0eerror_response\x18c \x01(\v2\x17.termwire.ErrorResponseH\x00R\rerrorResponseB\x06\n" +
+	" \x01(\v2\x1e.termwire.v1.GetVersionRequestH\x00R\x11getVersionRequest\x12S\n" +
+	"\x14get_version_response\x18\v \x01(\v2\x1f.termwire.v1.GetVersionResponseH\x00R\x12getVersionResponse\x12`\n" +
+	"\x19get_terminal_info_request\x18\f \x01(\v2#.termwire.v1.GetTerminalInfoRequestH\x00R\x16getTerminalInfoRequest\x12c\n" +
+	"\x1aget_terminal_info_response\x18\r \x01(\v2$.termwire.v1.GetTerminalInfoResponseH\x00R\x17getTerminalInfoResponse\x12J\n" +
+	"\x11get_banks_request\x18\x14 \x01(\v2\x1c.termwire.v1.GetBanksRequestH\x00R\x0fgetBanksRequest\x12M\n" +
+	"\x12get_banks_response\x18\x15 \x01(\v2\x1d.termwire.v1.GetBanksResponseH\x00R\x10getBanksResponse\x12Y\n" +
+	"\x16card_insertion_request\x18\x1e \x01(\v2!.termwire.v1.CardInsertionRequestH\x00R\x14cardInsertionRequest\x12\\\n" +
+	"\x17card_insertion_response\x18\x1f \x01(\v2\".termwire.v1.CardInsertionResponseH\x00R\x15cardInsertionResponse\x12e\n" +
+	"\x1apayment_processing_request\x18  \x01(\v2%.termwire.v1.PaymentProcessingRequestH\x00R\x18paymentProcessingRequest\x12l\n" +
+	"\x1dloyalty_card_inquiry_response\x18! \x01(\v2'.termwire.v1.LoyaltyCardInquiryResponseH\x00R\x1aloyaltyCardInquiryResponse\x12h\n" +
+	"\x1bloyalty_points_confirmation\x18\" \x01(\v2&.termwire.v1.LoyaltyPointsConfirmationH\x00R\x19loyaltyPointsConfirmation\x12e\n" +
+	"\x1apayment_completion_request\x18# \x01(\v2%.termwire.v1.PaymentCompletionRequestH\x00R\x18paymentCompletionRequest\x12h\n" +
+	"\x1bpayment_completion_response\x18$ \x01(\v2&.termwire.v1.PaymentCompletionResponseH\x00R\x19paymentCompletionResponse\x12e\n" +
+	"\x1arefund_transaction_request\x18* \x01(\v2%.termwire.v1.RefundTransactionRequestH\x00R\x18refundTransactionRequest\x12h\n" +
+	"\x1brefund_transaction_response\x18+ \x01(\v2&.termwire.v1.RefundTransactionResponseH\x00R\x19refundTransactionResponse\x12_\n" +
+	"\x18void_transaction_request\x18, \x01(\v2#.termwire.v1.VoidTransactionRequestH\x00R\x16voidTransactionRequest\x12b\n" +
+	"\x19void_transaction_response\x18- \x01(\v2$.termwire.v1.VoidTransactionResponseH\x00R\x17voidTransactionResponse\x12G\n" +
+	"\x10x_report_request\x18< \x01(\v2\x1b.termwire.v1.XReportRequestH\x00R\x0exReportRequest\x12J\n" +
+	"\x11x_report_response\x18= \x01(\v2\x1c.termwire.v1.XReportResponseH\x00R\x0fxReportResponse\x12G\n" +
+	"\x10z_report_request\x18> \x01(\v2\x1b.termwire.v1.ZReportRequestH\x00R\x0ezReportRequest\x12J\n" +
+	"\x11z_report_response\x18? \x01(\v2\x1c.termwire.v1.ZReportResponseH\x00R\x0fzReportResponse\x12\\\n" +
+	"\x17detailed_report_request\x18@ \x01(\v2\".termwire.v1.DetailedReportRequestH\x00R\x15detailedReportRequest\x12_\n" +
+	"\x18detailed_report_response\x18A \x01(\v2#.termwire.v1.DetailedReportResponseH\x00R\x16detailedReportResponse\x12`\n" +
+	"\x19gift_card_inquiry_request\x18F \x01(\v2#.termwire.v1.GiftCardInquiryRequestH\x00R\x16giftCardInquiryRequest\x12c\n" +
+	"\x1agift_card_inquiry_response\x18G \x01(\v2$.termwire.v1.GiftCardInquiryResponseH\x00R\x17giftCardInquiryResponse\x12]\n" +
+	"\x18gift_card_charge_request\x18H \x01(\v2\".termwire.v1.GiftCardChargeRequestH\x00R\x15giftCardChargeRequest\x12`\n" +
+	"\x19gift_card_charge_response\x18I \x01(\v2#.termwire.v1.GiftCardChargeResponseH\x00R\x16giftCardChargeResponse\x12C\n" +
+	"\x0eerror_response\x18c \x01(\v2\x1a.termwire.v1.ErrorResponseH\x00R\rerrorResponseB\x06\n" +
 	"\x04body\"\x13\n" +
 	"\x11GetVersionRequest\"B\n" +
 	"\x12GetVersionResponse\x12\x12\n" +
@@ -2983,10 +2983,10 @@ const file_protocol_termwire_proto_rawDesc = "" +
 	"\x0fGetBanksRequest\"*\n" +
 	"\x04Bank\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\rR\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\"L\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\"O\n" +
 	"\x10GetBanksResponse\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\x12$\n" +
-	"\x05banks\x18\x02 \x03(\v2\x0e.termwire.BankR\x05banks\"\xbd\x01\n" +
+	"\x04code\x18\x01 \x01(\tR\x04code\x12'\n" +
+	"\x05banks\x18\x02 \x03(\v2\x11.termwire.v1.BankR\x05banks\"\xbd\x01\n" +
 	"\x0fBankApplication\x12\x17\n" +
 	"\abank_id\x18\x01 \x01(\rR\x06bankId\x12\x1b\n" +
 	"\tbank_name\x18\x02 \x01(\tR\bbankName\x12\x1b\n" +
@@ -2997,12 +2997,12 @@ const file_protocol_termwire_proto_rawDesc = "" +
 	"\x14CardInsertionRequest\x128\n" +
 	"\x18transaction_amount_cents\x18\x01 \x01(\rR\x16transactionAmountCents\x12\x1a\n" +
 	"\bcurrency\x18\x02 \x01(\tR\bcurrency\x12%\n" +
-	"\x0etransaction_id\x18\x03 \x01(\tR\rtransactionId\"\xe1\x01\n" +
+	"\x0etransaction_id\x18\x03 \x01(\tR\rtransactionId\"\xe4\x01\n" +
 	"\x15CardInsertionResponse\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\tR\x04code\x12,\n" +
 	"\x12card_number_masked\x18\x02 \x01(\tR\x10cardNumberMasked\x12(\n" +
-	"\x10card_holder_name\x18\x03 \x01(\tR\x0ecardHolderName\x12B\n" +
-	"\x0favailable_banks\x18\x04 \x03(\v2\x19.termwire.BankApplicationR\x0eavailableBanks\x12\x18\n" +
+	"\x10card_holder_name\x18\x03 \x01(\tR\x0ecardHolderName\x12E\n" +
+	"\x0favailable_banks\x18\x04 \x03(\v2\x1c.termwire.v1.BankApplicationR\x0eavailableBanks\x12\x18\n" +
 	"\amessage\x18\x05 \x01(\tR\amessage\"\xe9\x01\n" +
 	"\x18PaymentProcessingRequest\x12(\n" +
 	"\x10selected_bank_id\x18\x01 \x01(\rR\x0eselectedBankId\x12,\n" +
@@ -3064,27 +3064,27 @@ const file_protocol_termwire_proto_rawDesc = "" +
 	"\x11confirmation_code\x18\x03 \x01(\tR\x10confirmationCode\x12\x18\n" +
 	"\amessage\x18\x04 \x01(\tR\amessage\x12\x1a\n" +
 	"\bcurrency\x18\x05 \x01(\tR\bcurrency\"\x10\n" +
-	"\x0eXReportRequest\"\xa1\x03\n" +
+	"\x0eXReportRequest\"\xad\x03\n" +
 	"\x0fXReportResponse\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\tR\x04code\x12)\n" +
 	"\x10report_timestamp\x18\x02 \x01(\tR\x0freportTimestamp\x12+\n" +
-	"\x11transaction_count\x18\x03 \x01(\rR\x10transactionCount\x12;\n" +
-	"\fsales_totals\x18\x04 \x03(\v2\x18.termwire.CurrencyTotalsR\vsalesTotals\x12=\n" +
-	"\rrefund_totals\x18\x05 \x03(\v2\x18.termwire.CurrencyTotalsR\frefundTotals\x129\n" +
-	"\vvoid_totals\x18\x06 \x03(\v2\x18.termwire.CurrencyTotalsR\n" +
-	"voidTotals\x12Q\n" +
-	"\x15payment_method_totals\x18\a \x03(\v2\x1d.termwire.PaymentMethodTotalsR\x13paymentMethodTotals\x12\x18\n" +
+	"\x11transaction_count\x18\x03 \x01(\rR\x10transactionCount\x12>\n" +
+	"\fsales_totals\x18\x04 \x03(\v2\x1b.termwire.v1.CurrencyTotalsR\vsalesTotals\x12@\n" +
+	"\rrefund_totals\x18\x05 \x03(\v2\x1b.termwire.v1.CurrencyTotalsR\frefundTotals\x12<\n" +
+	"\vvoid_totals\x18\x06 \x03(\v2\x1b.termwire.v1.CurrencyTotalsR\n" +
+	"voidTotals\x12T\n" +
+	"\x15payment_method_totals\x18\a \x03(\v2 .termwire.v1.PaymentMethodTotalsR\x13paymentMethodTotals\x12\x18\n" +
 	"\amessage\x18\b \x01(\tR\amessage\"\x10\n" +
-	"\x0eZReportRequest\"\xc9\x03\n" +
+	"\x0eZReportRequest\"\xd5\x03\n" +
 	"\x0fZReportResponse\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\tR\x04code\x12)\n" +
 	"\x10report_timestamp\x18\x02 \x01(\tR\x0freportTimestamp\x12+\n" +
-	"\x11transaction_count\x18\x03 \x01(\rR\x10transactionCount\x12;\n" +
-	"\fsales_totals\x18\x04 \x03(\v2\x18.termwire.CurrencyTotalsR\vsalesTotals\x12=\n" +
-	"\rrefund_totals\x18\x05 \x03(\v2\x18.termwire.CurrencyTotalsR\frefundTotals\x129\n" +
-	"\vvoid_totals\x18\x06 \x03(\v2\x18.termwire.CurrencyTotalsR\n" +
-	"voidTotals\x12Q\n" +
-	"\x15payment_method_totals\x18\a \x03(\v2\x1d.termwire.PaymentMethodTotalsR\x13paymentMethodTotals\x12&\n" +
+	"\x11transaction_count\x18\x03 \x01(\rR\x10transactionCount\x12>\n" +
+	"\fsales_totals\x18\x04 \x03(\v2\x1b.termwire.v1.CurrencyTotalsR\vsalesTotals\x12@\n" +
+	"\rrefund_totals\x18\x05 \x03(\v2\x1b.termwire.v1.CurrencyTotalsR\frefundTotals\x12<\n" +
+	"\vvoid_totals\x18\x06 \x03(\v2\x1b.termwire.v1.CurrencyTotalsR\n" +
+	"voidTotals\x12T\n" +
+	"\x15payment_method_totals\x18\a \x03(\v2 .termwire.v1.PaymentMethodTotalsR\x13paymentMethodTotals\x12&\n" +
 	"\x0fz_report_number\x18\b \x01(\rR\rzReportNumber\x12\x18\n" +
 	"\amessage\x18\t \x01(\tR\amessage\"\xd0\x01\n" +
 	"\x15DetailedReportRequest\x12%\n" +
@@ -3093,12 +3093,12 @@ const file_protocol_termwire_proto_rawDesc = "" +
 	"\x05limit\x18\x03 \x01(\rR\x05limit\x12\x16\n" +
 	"\x06cursor\x18\x04 \x01(\tR\x06cursor\x12#\n" +
 	"\rinclude_voids\x18\x05 \x01(\bR\fincludeVoids\x12\x1a\n" +
-	"\bcurrency\x18\x06 \x01(\tR\bcurrency\"\xaf\x04\n" +
+	"\bcurrency\x18\x06 \x01(\tR\bcurrency\"\xb5\x04\n" +
 	"\x10TransactionEntry\x12%\n" +
-	"\x0etransaction_id\x18\x01 \x01(\tR\rtransactionId\x12-\n" +
-	"\x04type\x18\x02 \x01(\x0e2\x19.termwire.TransactionTypeR\x04type\x12!\n" +
-	"\famount_cents\x18\x03 \x01(\rR\vamountCents\x12>\n" +
-	"\x0epayment_method\x18\x04 \x01(\x0e2\x17.termwire.PaymentMethodR\rpaymentMethod\x12$\n" +
+	"\x0etransaction_id\x18\x01 \x01(\tR\rtransactionId\x120\n" +
+	"\x04type\x18\x02 \x01(\x0e2\x1c.termwire.v1.TransactionTypeR\x04type\x12!\n" +
+	"\famount_cents\x18\x03 \x01(\rR\vamountCents\x12A\n" +
+	"\x0epayment_method\x18\x04 \x01(\x0e2\x1a.termwire.v1.PaymentMethodR\rpaymentMethod\x12$\n" +
 	"\x0ecard_last_four\x18\x05 \x01(\tR\fcardLastFour\x120\n" +
 	"\x14loyalty_amount_cents\x18\x06 \x01(\rR\x12loyaltyAmountCents\x12+\n" +
 	"\x11confirmation_code\x18\a \x01(\tR\x10confirmationCode\x12%\n" +
@@ -3108,19 +3108,19 @@ const file_protocol_termwire_proto_rawDesc = "" +
 	" \x01(\rR\x06bankId\x12\x1a\n" +
 	"\bcurrency\x18\v \x01(\tR\bcurrency\x12+\n" +
 	"\x11installment_count\x18\f \x01(\rR\x10installmentCount\x126\n" +
-	"\x17original_transaction_id\x18\r \x01(\tR\x15originalTransactionId\"\xa7\x01\n" +
+	"\x17original_transaction_id\x18\r \x01(\tR\x15originalTransactionId\"\xaa\x01\n" +
 	"\x16DetailedReportResponse\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\x12>\n" +
-	"\ftransactions\x18\x02 \x03(\v2\x1a.termwire.TransactionEntryR\ftransactions\x12\x1f\n" +
+	"\x04code\x18\x01 \x01(\tR\x04code\x12A\n" +
+	"\ftransactions\x18\x02 \x03(\v2\x1d.termwire.v1.TransactionEntryR\ftransactions\x12\x1f\n" +
 	"\vnext_cursor\x18\x03 \x01(\tR\n" +
 	"nextCursor\x12\x18\n" +
 	"\amessage\x18\x04 \x01(\tR\amessage\"e\n" +
 	"\x0eCurrencyTotals\x12\x1a\n" +
 	"\bcurrency\x18\x01 \x01(\tR\bcurrency\x12!\n" +
 	"\famount_cents\x18\x02 \x01(\rR\vamountCents\x12\x14\n" +
-	"\x05count\x18\x03 \x01(\rR\x05count\"\x9b\x01\n" +
-	"\x13PaymentMethodTotals\x12/\n" +
-	"\x06method\x18\x01 \x01(\x0e2\x17.termwire.PaymentMethodR\x06method\x12\x1a\n" +
+	"\x05count\x18\x03 \x01(\rR\x05count\"\x9e\x01\n" +
+	"\x13PaymentMethodTotals\x122\n" +
+	"\x06method\x18\x01 \x01(\x0e2\x1a.termwire.v1.PaymentMethodR\x06method\x12\x1a\n" +
 	"\bcurrency\x18\x02 \x01(\tR\bcurrency\x12!\n" +
 	"\famount_cents\x18\x03 \x01(\rR\vamountCents\x12\x14\n" +
 	"\x05count\x18\x04 \x01(\rR\x05count\"U\n" +
@@ -3167,100 +3167,100 @@ const file_protocol_termwire_proto_rawDesc = "" +
 	"\x1bcom.sirfi.termwire.protocolB\rTermwireProtoZ\"github.com/sirfi/termwire/protocol\xaa\x02\x17Sirfi.Termwire.Protocolb\x06proto3"
 
 var (
-	file_protocol_termwire_proto_rawDescOnce sync.Once
-	file_protocol_termwire_proto_rawDescData []byte
+	file_termwire_v1_termwire_proto_rawDescOnce sync.Once
+	file_termwire_v1_termwire_proto_rawDescData []byte
 )
 
-func file_protocol_termwire_proto_rawDescGZIP() []byte {
-	file_protocol_termwire_proto_rawDescOnce.Do(func() {
-		file_protocol_termwire_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_protocol_termwire_proto_rawDesc), len(file_protocol_termwire_proto_rawDesc)))
+func file_termwire_v1_termwire_proto_rawDescGZIP() []byte {
+	file_termwire_v1_termwire_proto_rawDescOnce.Do(func() {
+		file_termwire_v1_termwire_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_termwire_v1_termwire_proto_rawDesc), len(file_termwire_v1_termwire_proto_rawDesc)))
 	})
-	return file_protocol_termwire_proto_rawDescData
+	return file_termwire_v1_termwire_proto_rawDescData
 }
 
-var file_protocol_termwire_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_protocol_termwire_proto_msgTypes = make([]protoimpl.MessageInfo, 34)
-var file_protocol_termwire_proto_goTypes = []any{
-	(TransactionType)(0),               // 0: termwire.TransactionType
-	(PaymentMethod)(0),                 // 1: termwire.PaymentMethod
-	(*Message)(nil),                    // 2: termwire.Message
-	(*GetVersionRequest)(nil),          // 3: termwire.GetVersionRequest
-	(*GetVersionResponse)(nil),         // 4: termwire.GetVersionResponse
-	(*GetTerminalInfoRequest)(nil),     // 5: termwire.GetTerminalInfoRequest
-	(*GetTerminalInfoResponse)(nil),    // 6: termwire.GetTerminalInfoResponse
-	(*GetBanksRequest)(nil),            // 7: termwire.GetBanksRequest
-	(*Bank)(nil),                       // 8: termwire.Bank
-	(*GetBanksResponse)(nil),           // 9: termwire.GetBanksResponse
-	(*BankApplication)(nil),            // 10: termwire.BankApplication
-	(*CardInsertionRequest)(nil),       // 11: termwire.CardInsertionRequest
-	(*CardInsertionResponse)(nil),      // 12: termwire.CardInsertionResponse
-	(*PaymentProcessingRequest)(nil),   // 13: termwire.PaymentProcessingRequest
-	(*LoyaltyCardInquiryResponse)(nil), // 14: termwire.LoyaltyCardInquiryResponse
-	(*LoyaltyPointsConfirmation)(nil),  // 15: termwire.LoyaltyPointsConfirmation
-	(*PaymentCompletionRequest)(nil),   // 16: termwire.PaymentCompletionRequest
-	(*PaymentCompletionResponse)(nil),  // 17: termwire.PaymentCompletionResponse
-	(*RefundTransactionRequest)(nil),   // 18: termwire.RefundTransactionRequest
-	(*RefundTransactionResponse)(nil),  // 19: termwire.RefundTransactionResponse
-	(*VoidTransactionRequest)(nil),     // 20: termwire.VoidTransactionRequest
-	(*VoidTransactionResponse)(nil),    // 21: termwire.VoidTransactionResponse
-	(*XReportRequest)(nil),             // 22: termwire.XReportRequest
-	(*XReportResponse)(nil),            // 23: termwire.XReportResponse
-	(*ZReportRequest)(nil),             // 24: termwire.ZReportRequest
-	(*ZReportResponse)(nil),            // 25: termwire.ZReportResponse
-	(*DetailedReportRequest)(nil),      // 26: termwire.DetailedReportRequest
-	(*TransactionEntry)(nil),           // 27: termwire.TransactionEntry
-	(*DetailedReportResponse)(nil),     // 28: termwire.DetailedReportResponse
-	(*CurrencyTotals)(nil),             // 29: termwire.CurrencyTotals
-	(*PaymentMethodTotals)(nil),        // 30: termwire.PaymentMethodTotals
-	(*GiftCardInquiryRequest)(nil),     // 31: termwire.GiftCardInquiryRequest
-	(*GiftCardInquiryResponse)(nil),    // 32: termwire.GiftCardInquiryResponse
-	(*GiftCardChargeRequest)(nil),      // 33: termwire.GiftCardChargeRequest
-	(*GiftCardChargeResponse)(nil),     // 34: termwire.GiftCardChargeResponse
-	(*ErrorResponse)(nil),              // 35: termwire.ErrorResponse
+var file_termwire_v1_termwire_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_termwire_v1_termwire_proto_msgTypes = make([]protoimpl.MessageInfo, 34)
+var file_termwire_v1_termwire_proto_goTypes = []any{
+	(TransactionType)(0),               // 0: termwire.v1.TransactionType
+	(PaymentMethod)(0),                 // 1: termwire.v1.PaymentMethod
+	(*Message)(nil),                    // 2: termwire.v1.Message
+	(*GetVersionRequest)(nil),          // 3: termwire.v1.GetVersionRequest
+	(*GetVersionResponse)(nil),         // 4: termwire.v1.GetVersionResponse
+	(*GetTerminalInfoRequest)(nil),     // 5: termwire.v1.GetTerminalInfoRequest
+	(*GetTerminalInfoResponse)(nil),    // 6: termwire.v1.GetTerminalInfoResponse
+	(*GetBanksRequest)(nil),            // 7: termwire.v1.GetBanksRequest
+	(*Bank)(nil),                       // 8: termwire.v1.Bank
+	(*GetBanksResponse)(nil),           // 9: termwire.v1.GetBanksResponse
+	(*BankApplication)(nil),            // 10: termwire.v1.BankApplication
+	(*CardInsertionRequest)(nil),       // 11: termwire.v1.CardInsertionRequest
+	(*CardInsertionResponse)(nil),      // 12: termwire.v1.CardInsertionResponse
+	(*PaymentProcessingRequest)(nil),   // 13: termwire.v1.PaymentProcessingRequest
+	(*LoyaltyCardInquiryResponse)(nil), // 14: termwire.v1.LoyaltyCardInquiryResponse
+	(*LoyaltyPointsConfirmation)(nil),  // 15: termwire.v1.LoyaltyPointsConfirmation
+	(*PaymentCompletionRequest)(nil),   // 16: termwire.v1.PaymentCompletionRequest
+	(*PaymentCompletionResponse)(nil),  // 17: termwire.v1.PaymentCompletionResponse
+	(*RefundTransactionRequest)(nil),   // 18: termwire.v1.RefundTransactionRequest
+	(*RefundTransactionResponse)(nil),  // 19: termwire.v1.RefundTransactionResponse
+	(*VoidTransactionRequest)(nil),     // 20: termwire.v1.VoidTransactionRequest
+	(*VoidTransactionResponse)(nil),    // 21: termwire.v1.VoidTransactionResponse
+	(*XReportRequest)(nil),             // 22: termwire.v1.XReportRequest
+	(*XReportResponse)(nil),            // 23: termwire.v1.XReportResponse
+	(*ZReportRequest)(nil),             // 24: termwire.v1.ZReportRequest
+	(*ZReportResponse)(nil),            // 25: termwire.v1.ZReportResponse
+	(*DetailedReportRequest)(nil),      // 26: termwire.v1.DetailedReportRequest
+	(*TransactionEntry)(nil),           // 27: termwire.v1.TransactionEntry
+	(*DetailedReportResponse)(nil),     // 28: termwire.v1.DetailedReportResponse
+	(*CurrencyTotals)(nil),             // 29: termwire.v1.CurrencyTotals
+	(*PaymentMethodTotals)(nil),        // 30: termwire.v1.PaymentMethodTotals
+	(*GiftCardInquiryRequest)(nil),     // 31: termwire.v1.GiftCardInquiryRequest
+	(*GiftCardInquiryResponse)(nil),    // 32: termwire.v1.GiftCardInquiryResponse
+	(*GiftCardChargeRequest)(nil),      // 33: termwire.v1.GiftCardChargeRequest
+	(*GiftCardChargeResponse)(nil),     // 34: termwire.v1.GiftCardChargeResponse
+	(*ErrorResponse)(nil),              // 35: termwire.v1.ErrorResponse
 }
-var file_protocol_termwire_proto_depIdxs = []int32{
-	3,  // 0: termwire.Message.get_version_request:type_name -> termwire.GetVersionRequest
-	4,  // 1: termwire.Message.get_version_response:type_name -> termwire.GetVersionResponse
-	5,  // 2: termwire.Message.get_terminal_info_request:type_name -> termwire.GetTerminalInfoRequest
-	6,  // 3: termwire.Message.get_terminal_info_response:type_name -> termwire.GetTerminalInfoResponse
-	7,  // 4: termwire.Message.get_banks_request:type_name -> termwire.GetBanksRequest
-	9,  // 5: termwire.Message.get_banks_response:type_name -> termwire.GetBanksResponse
-	11, // 6: termwire.Message.card_insertion_request:type_name -> termwire.CardInsertionRequest
-	12, // 7: termwire.Message.card_insertion_response:type_name -> termwire.CardInsertionResponse
-	13, // 8: termwire.Message.payment_processing_request:type_name -> termwire.PaymentProcessingRequest
-	14, // 9: termwire.Message.loyalty_card_inquiry_response:type_name -> termwire.LoyaltyCardInquiryResponse
-	15, // 10: termwire.Message.loyalty_points_confirmation:type_name -> termwire.LoyaltyPointsConfirmation
-	16, // 11: termwire.Message.payment_completion_request:type_name -> termwire.PaymentCompletionRequest
-	17, // 12: termwire.Message.payment_completion_response:type_name -> termwire.PaymentCompletionResponse
-	18, // 13: termwire.Message.refund_transaction_request:type_name -> termwire.RefundTransactionRequest
-	19, // 14: termwire.Message.refund_transaction_response:type_name -> termwire.RefundTransactionResponse
-	20, // 15: termwire.Message.void_transaction_request:type_name -> termwire.VoidTransactionRequest
-	21, // 16: termwire.Message.void_transaction_response:type_name -> termwire.VoidTransactionResponse
-	22, // 17: termwire.Message.x_report_request:type_name -> termwire.XReportRequest
-	23, // 18: termwire.Message.x_report_response:type_name -> termwire.XReportResponse
-	24, // 19: termwire.Message.z_report_request:type_name -> termwire.ZReportRequest
-	25, // 20: termwire.Message.z_report_response:type_name -> termwire.ZReportResponse
-	26, // 21: termwire.Message.detailed_report_request:type_name -> termwire.DetailedReportRequest
-	28, // 22: termwire.Message.detailed_report_response:type_name -> termwire.DetailedReportResponse
-	31, // 23: termwire.Message.gift_card_inquiry_request:type_name -> termwire.GiftCardInquiryRequest
-	32, // 24: termwire.Message.gift_card_inquiry_response:type_name -> termwire.GiftCardInquiryResponse
-	33, // 25: termwire.Message.gift_card_charge_request:type_name -> termwire.GiftCardChargeRequest
-	34, // 26: termwire.Message.gift_card_charge_response:type_name -> termwire.GiftCardChargeResponse
-	35, // 27: termwire.Message.error_response:type_name -> termwire.ErrorResponse
-	8,  // 28: termwire.GetBanksResponse.banks:type_name -> termwire.Bank
-	10, // 29: termwire.CardInsertionResponse.available_banks:type_name -> termwire.BankApplication
-	29, // 30: termwire.XReportResponse.sales_totals:type_name -> termwire.CurrencyTotals
-	29, // 31: termwire.XReportResponse.refund_totals:type_name -> termwire.CurrencyTotals
-	29, // 32: termwire.XReportResponse.void_totals:type_name -> termwire.CurrencyTotals
-	30, // 33: termwire.XReportResponse.payment_method_totals:type_name -> termwire.PaymentMethodTotals
-	29, // 34: termwire.ZReportResponse.sales_totals:type_name -> termwire.CurrencyTotals
-	29, // 35: termwire.ZReportResponse.refund_totals:type_name -> termwire.CurrencyTotals
-	29, // 36: termwire.ZReportResponse.void_totals:type_name -> termwire.CurrencyTotals
-	30, // 37: termwire.ZReportResponse.payment_method_totals:type_name -> termwire.PaymentMethodTotals
-	0,  // 38: termwire.TransactionEntry.type:type_name -> termwire.TransactionType
-	1,  // 39: termwire.TransactionEntry.payment_method:type_name -> termwire.PaymentMethod
-	27, // 40: termwire.DetailedReportResponse.transactions:type_name -> termwire.TransactionEntry
-	1,  // 41: termwire.PaymentMethodTotals.method:type_name -> termwire.PaymentMethod
+var file_termwire_v1_termwire_proto_depIdxs = []int32{
+	3,  // 0: termwire.v1.Message.get_version_request:type_name -> termwire.v1.GetVersionRequest
+	4,  // 1: termwire.v1.Message.get_version_response:type_name -> termwire.v1.GetVersionResponse
+	5,  // 2: termwire.v1.Message.get_terminal_info_request:type_name -> termwire.v1.GetTerminalInfoRequest
+	6,  // 3: termwire.v1.Message.get_terminal_info_response:type_name -> termwire.v1.GetTerminalInfoResponse
+	7,  // 4: termwire.v1.Message.get_banks_request:type_name -> termwire.v1.GetBanksRequest
+	9,  // 5: termwire.v1.Message.get_banks_response:type_name -> termwire.v1.GetBanksResponse
+	11, // 6: termwire.v1.Message.card_insertion_request:type_name -> termwire.v1.CardInsertionRequest
+	12, // 7: termwire.v1.Message.card_insertion_response:type_name -> termwire.v1.CardInsertionResponse
+	13, // 8: termwire.v1.Message.payment_processing_request:type_name -> termwire.v1.PaymentProcessingRequest
+	14, // 9: termwire.v1.Message.loyalty_card_inquiry_response:type_name -> termwire.v1.LoyaltyCardInquiryResponse
+	15, // 10: termwire.v1.Message.loyalty_points_confirmation:type_name -> termwire.v1.LoyaltyPointsConfirmation
+	16, // 11: termwire.v1.Message.payment_completion_request:type_name -> termwire.v1.PaymentCompletionRequest
+	17, // 12: termwire.v1.Message.payment_completion_response:type_name -> termwire.v1.PaymentCompletionResponse
+	18, // 13: termwire.v1.Message.refund_transaction_request:type_name -> termwire.v1.RefundTransactionRequest
+	19, // 14: termwire.v1.Message.refund_transaction_response:type_name -> termwire.v1.RefundTransactionResponse
+	20, // 15: termwire.v1.Message.void_transaction_request:type_name -> termwire.v1.VoidTransactionRequest
+	21, // 16: termwire.v1.Message.void_transaction_response:type_name -> termwire.v1.VoidTransactionResponse
+	22, // 17: termwire.v1.Message.x_report_request:type_name -> termwire.v1.XReportRequest
+	23, // 18: termwire.v1.Message.x_report_response:type_name -> termwire.v1.XReportResponse
+	24, // 19: termwire.v1.Message.z_report_request:type_name -> termwire.v1.ZReportRequest
+	25, // 20: termwire.v1.Message.z_report_response:type_name -> termwire.v1.ZReportResponse
+	26, // 21: termwire.v1.Message.detailed_report_request:type_name -> termwire.v1.DetailedReportRequest
+	28, // 22: termwire.v1.Message.detailed_report_response:type_name -> termwire.v1.DetailedReportResponse
+	31, // 23: termwire.v1.Message.gift_card_inquiry_request:type_name -> termwire.v1.GiftCardInquiryRequest
+	32, // 24: termwire.v1.Message.gift_card_inquiry_response:type_name -> termwire.v1.GiftCardInquiryResponse
+	33, // 25: termwire.v1.Message.gift_card_charge_request:type_name -> termwire.v1.GiftCardChargeRequest
+	34, // 26: termwire.v1.Message.gift_card_charge_response:type_name -> termwire.v1.GiftCardChargeResponse
+	35, // 27: termwire.v1.Message.error_response:type_name -> termwire.v1.ErrorResponse
+	8,  // 28: termwire.v1.GetBanksResponse.banks:type_name -> termwire.v1.Bank
+	10, // 29: termwire.v1.CardInsertionResponse.available_banks:type_name -> termwire.v1.BankApplication
+	29, // 30: termwire.v1.XReportResponse.sales_totals:type_name -> termwire.v1.CurrencyTotals
+	29, // 31: termwire.v1.XReportResponse.refund_totals:type_name -> termwire.v1.CurrencyTotals
+	29, // 32: termwire.v1.XReportResponse.void_totals:type_name -> termwire.v1.CurrencyTotals
+	30, // 33: termwire.v1.XReportResponse.payment_method_totals:type_name -> termwire.v1.PaymentMethodTotals
+	29, // 34: termwire.v1.ZReportResponse.sales_totals:type_name -> termwire.v1.CurrencyTotals
+	29, // 35: termwire.v1.ZReportResponse.refund_totals:type_name -> termwire.v1.CurrencyTotals
+	29, // 36: termwire.v1.ZReportResponse.void_totals:type_name -> termwire.v1.CurrencyTotals
+	30, // 37: termwire.v1.ZReportResponse.payment_method_totals:type_name -> termwire.v1.PaymentMethodTotals
+	0,  // 38: termwire.v1.TransactionEntry.type:type_name -> termwire.v1.TransactionType
+	1,  // 39: termwire.v1.TransactionEntry.payment_method:type_name -> termwire.v1.PaymentMethod
+	27, // 40: termwire.v1.DetailedReportResponse.transactions:type_name -> termwire.v1.TransactionEntry
+	1,  // 41: termwire.v1.PaymentMethodTotals.method:type_name -> termwire.v1.PaymentMethod
 	42, // [42:42] is the sub-list for method output_type
 	42, // [42:42] is the sub-list for method input_type
 	42, // [42:42] is the sub-list for extension type_name
@@ -3268,12 +3268,12 @@ var file_protocol_termwire_proto_depIdxs = []int32{
 	0,  // [0:42] is the sub-list for field type_name
 }
 
-func init() { file_protocol_termwire_proto_init() }
-func file_protocol_termwire_proto_init() {
-	if File_protocol_termwire_proto != nil {
+func init() { file_termwire_v1_termwire_proto_init() }
+func file_termwire_v1_termwire_proto_init() {
+	if File_termwire_v1_termwire_proto != nil {
 		return
 	}
-	file_protocol_termwire_proto_msgTypes[0].OneofWrappers = []any{
+	file_termwire_v1_termwire_proto_msgTypes[0].OneofWrappers = []any{
 		(*Message_GetVersionRequest)(nil),
 		(*Message_GetVersionResponse)(nil),
 		(*Message_GetTerminalInfoRequest)(nil),
@@ -3307,18 +3307,18 @@ func file_protocol_termwire_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_protocol_termwire_proto_rawDesc), len(file_protocol_termwire_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_termwire_v1_termwire_proto_rawDesc), len(file_termwire_v1_termwire_proto_rawDesc)),
 			NumEnums:      2,
 			NumMessages:   34,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_protocol_termwire_proto_goTypes,
-		DependencyIndexes: file_protocol_termwire_proto_depIdxs,
-		EnumInfos:         file_protocol_termwire_proto_enumTypes,
-		MessageInfos:      file_protocol_termwire_proto_msgTypes,
+		GoTypes:           file_termwire_v1_termwire_proto_goTypes,
+		DependencyIndexes: file_termwire_v1_termwire_proto_depIdxs,
+		EnumInfos:         file_termwire_v1_termwire_proto_enumTypes,
+		MessageInfos:      file_termwire_v1_termwire_proto_msgTypes,
 	}.Build()
-	File_protocol_termwire_proto = out.File
-	file_protocol_termwire_proto_goTypes = nil
-	file_protocol_termwire_proto_depIdxs = nil
+	File_termwire_v1_termwire_proto = out.File
+	file_termwire_v1_termwire_proto_goTypes = nil
+	file_termwire_v1_termwire_proto_depIdxs = nil
 }
