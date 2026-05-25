@@ -211,8 +211,12 @@ func (s *Server) handleClientMessages(client *ClientConnection) {
 		client.lastActive = time.Now()
 
 		if err := s.handleFrame(client, frame); err != nil {
+			if err == io.EOF {
+				s.logger.Info("client disconnected (EOF)", slog.String("client_id", client.id))
+				return
+			}
 			s.logger.Error("frame handle error", slog.Any("error", err))
-			continue
+			return
 		}
 	}
 }
