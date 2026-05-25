@@ -18,7 +18,7 @@ type MessageHandler struct {
 }
 
 // NewMessageHandler creates a new message handler
-func NewMessageHandler(config *Config) (*MessageHandler, error) {
+func NewMessageHandler(config *Config, logger *slog.Logger) (*MessageHandler, error) {
 	tm, err := NewTransactionManager(config)
 	if err != nil {
 		return nil, fmt.Errorf("creating transaction manager: %w", err)
@@ -27,7 +27,7 @@ func NewMessageHandler(config *Config) (*MessageHandler, error) {
 		config:     config,
 		txnManager: tm,
 		cardReader: NewCardReader(),
-		logger:     slog.Default(),
+		logger:     logger,
 	}, nil
 }
 
