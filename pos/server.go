@@ -361,12 +361,11 @@ func (s *Server) sendFrame(client *ClientConnection, frame *protocol.Frame) erro
 
 // sendErrorResponse sends an error response to the client
 func (s *Server) sendErrorResponse(client *ClientConnection, sequence uint16, errorMsg string) error {
-	// Create error message
 	errorResponse := &pb.Message{
 		MessageId: fmt.Sprintf("ERR-%d", time.Now().Unix()),
 		Timestamp: time.Now().Format(time.RFC3339),
-		Body: &pb.Message_CardInsertionResponse{
-			CardInsertionResponse: &pb.CardInsertionResponse{
+		Body: &pb.Message_ErrorResponse{
+			ErrorResponse: &pb.ErrorResponse{
 				Code:    "99",
 				Message: errorMsg,
 			},

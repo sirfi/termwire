@@ -48,11 +48,11 @@ func main() {
 	if err != nil {
 		log.Printf("Payment 1 failed: %v", err)
 		if result1 != nil {
-			paymentFlow.UpdatedPrintReceipt(result1, "TRY")
+			paymentFlow.PrintReceipt(result1, "TRY")
 		}
 	} else {
 		fmt.Println("\n=== Payment 1 Successful ===")
-		paymentFlow.UpdatedPrintReceipt(result1, "TRY")
+		paymentFlow.PrintReceipt(result1, "TRY")
 	}
 
 	// Wait a bit before next transaction
@@ -75,11 +75,11 @@ func main() {
 	if err != nil {
 		log.Printf("Payment 2 failed: %v", err)
 		if result2 != nil {
-			paymentFlow.UpdatedPrintReceipt(result2, "TRY")
+			paymentFlow.PrintReceipt(result2, "TRY")
 		}
 	} else {
 		fmt.Println("\n=== Payment 2 Successful ===")
-		paymentFlow.UpdatedPrintReceipt(result2, "TRY")
+		paymentFlow.PrintReceipt(result2, "TRY")
 	}
 
 	// Example 3: Payment using manual flow for more control
@@ -163,7 +163,7 @@ func main() {
 		}
 
 		fmt.Println("\n=== Payment 3 Successful ===")
-		paymentFlow.UpdatedPrintReceipt(result3, "TRY")
+		paymentFlow.PrintReceipt(result3, "TRY")
 	}
 
 	fmt.Println("\nLoyalty payment examples completed successfully!")

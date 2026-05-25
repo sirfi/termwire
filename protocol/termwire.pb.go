@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.11
 // 	protoc        v5.29.3
-// source: termwire.proto
+// source: protocol/termwire.proto
 
 package protocol
 
@@ -60,11 +60,11 @@ func (x TransactionType) String() string {
 }
 
 func (TransactionType) Descriptor() protoreflect.EnumDescriptor {
-	return file_termwire_proto_enumTypes[0].Descriptor()
+	return file_protocol_termwire_proto_enumTypes[0].Descriptor()
 }
 
 func (TransactionType) Type() protoreflect.EnumType {
-	return &file_termwire_proto_enumTypes[0]
+	return &file_protocol_termwire_proto_enumTypes[0]
 }
 
 func (x TransactionType) Number() protoreflect.EnumNumber {
@@ -73,7 +73,7 @@ func (x TransactionType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use TransactionType.Descriptor instead.
 func (TransactionType) EnumDescriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{0}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{0}
 }
 
 type PaymentMethod int32
@@ -118,11 +118,11 @@ func (x PaymentMethod) String() string {
 }
 
 func (PaymentMethod) Descriptor() protoreflect.EnumDescriptor {
-	return file_termwire_proto_enumTypes[1].Descriptor()
+	return file_protocol_termwire_proto_enumTypes[1].Descriptor()
 }
 
 func (PaymentMethod) Type() protoreflect.EnumType {
-	return &file_termwire_proto_enumTypes[1]
+	return &file_protocol_termwire_proto_enumTypes[1]
 }
 
 func (x PaymentMethod) Number() protoreflect.EnumNumber {
@@ -131,7 +131,7 @@ func (x PaymentMethod) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use PaymentMethod.Descriptor instead.
 func (PaymentMethod) EnumDescriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{1}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{1}
 }
 
 type Message struct {
@@ -167,6 +167,7 @@ type Message struct {
 	//	*Message_GiftCardInquiryResponse
 	//	*Message_GiftCardChargeRequest
 	//	*Message_GiftCardChargeResponse
+	//	*Message_ErrorResponse
 	Body          isMessage_Body `protobuf_oneof:"body"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -174,7 +175,7 @@ type Message struct {
 
 func (x *Message) Reset() {
 	*x = Message{}
-	mi := &file_termwire_proto_msgTypes[0]
+	mi := &file_protocol_termwire_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -186,7 +187,7 @@ func (x *Message) String() string {
 func (*Message) ProtoMessage() {}
 
 func (x *Message) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[0]
+	mi := &file_protocol_termwire_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -199,7 +200,7 @@ func (x *Message) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Message.ProtoReflect.Descriptor instead.
 func (*Message) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{0}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *Message) GetMessageId() string {
@@ -466,6 +467,15 @@ func (x *Message) GetGiftCardChargeResponse() *GiftCardChargeResponse {
 	return nil
 }
 
+func (x *Message) GetErrorResponse() *ErrorResponse {
+	if x != nil {
+		if x, ok := x.Body.(*Message_ErrorResponse); ok {
+			return x.ErrorResponse
+		}
+	}
+	return nil
+}
+
 type isMessage_Body interface {
 	isMessage_Body()
 }
@@ -578,6 +588,10 @@ type Message_GiftCardChargeResponse struct {
 	GiftCardChargeResponse *GiftCardChargeResponse `protobuf:"bytes,73,opt,name=gift_card_charge_response,json=giftCardChargeResponse,proto3,oneof"`
 }
 
+type Message_ErrorResponse struct {
+	ErrorResponse *ErrorResponse `protobuf:"bytes,99,opt,name=error_response,json=errorResponse,proto3,oneof"`
+}
+
 func (*Message_GetVersionRequest) isMessage_Body() {}
 
 func (*Message_GetVersionResponse) isMessage_Body() {}
@@ -632,6 +646,8 @@ func (*Message_GiftCardChargeRequest) isMessage_Body() {}
 
 func (*Message_GiftCardChargeResponse) isMessage_Body() {}
 
+func (*Message_ErrorResponse) isMessage_Body() {}
+
 type GetVersionRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
@@ -640,7 +656,7 @@ type GetVersionRequest struct {
 
 func (x *GetVersionRequest) Reset() {
 	*x = GetVersionRequest{}
-	mi := &file_termwire_proto_msgTypes[1]
+	mi := &file_protocol_termwire_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -652,7 +668,7 @@ func (x *GetVersionRequest) String() string {
 func (*GetVersionRequest) ProtoMessage() {}
 
 func (x *GetVersionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[1]
+	mi := &file_protocol_termwire_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -665,7 +681,7 @@ func (x *GetVersionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetVersionRequest.ProtoReflect.Descriptor instead.
 func (*GetVersionRequest) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{1}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{1}
 }
 
 type GetVersionResponse struct {
@@ -678,7 +694,7 @@ type GetVersionResponse struct {
 
 func (x *GetVersionResponse) Reset() {
 	*x = GetVersionResponse{}
-	mi := &file_termwire_proto_msgTypes[2]
+	mi := &file_protocol_termwire_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -690,7 +706,7 @@ func (x *GetVersionResponse) String() string {
 func (*GetVersionResponse) ProtoMessage() {}
 
 func (x *GetVersionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[2]
+	mi := &file_protocol_termwire_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -703,7 +719,7 @@ func (x *GetVersionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetVersionResponse.ProtoReflect.Descriptor instead.
 func (*GetVersionResponse) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{2}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *GetVersionResponse) GetCode() string {
@@ -728,7 +744,7 @@ type GetTerminalInfoRequest struct {
 
 func (x *GetTerminalInfoRequest) Reset() {
 	*x = GetTerminalInfoRequest{}
-	mi := &file_termwire_proto_msgTypes[3]
+	mi := &file_protocol_termwire_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -740,7 +756,7 @@ func (x *GetTerminalInfoRequest) String() string {
 func (*GetTerminalInfoRequest) ProtoMessage() {}
 
 func (x *GetTerminalInfoRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[3]
+	mi := &file_protocol_termwire_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -753,7 +769,7 @@ func (x *GetTerminalInfoRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTerminalInfoRequest.ProtoReflect.Descriptor instead.
 func (*GetTerminalInfoRequest) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{3}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{3}
 }
 
 type GetTerminalInfoResponse struct {
@@ -767,7 +783,7 @@ type GetTerminalInfoResponse struct {
 
 func (x *GetTerminalInfoResponse) Reset() {
 	*x = GetTerminalInfoResponse{}
-	mi := &file_termwire_proto_msgTypes[4]
+	mi := &file_protocol_termwire_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -779,7 +795,7 @@ func (x *GetTerminalInfoResponse) String() string {
 func (*GetTerminalInfoResponse) ProtoMessage() {}
 
 func (x *GetTerminalInfoResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[4]
+	mi := &file_protocol_termwire_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -792,7 +808,7 @@ func (x *GetTerminalInfoResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTerminalInfoResponse.ProtoReflect.Descriptor instead.
 func (*GetTerminalInfoResponse) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{4}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *GetTerminalInfoResponse) GetCode() string {
@@ -824,7 +840,7 @@ type GetBanksRequest struct {
 
 func (x *GetBanksRequest) Reset() {
 	*x = GetBanksRequest{}
-	mi := &file_termwire_proto_msgTypes[5]
+	mi := &file_protocol_termwire_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -836,7 +852,7 @@ func (x *GetBanksRequest) String() string {
 func (*GetBanksRequest) ProtoMessage() {}
 
 func (x *GetBanksRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[5]
+	mi := &file_protocol_termwire_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -849,7 +865,7 @@ func (x *GetBanksRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetBanksRequest.ProtoReflect.Descriptor instead.
 func (*GetBanksRequest) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{5}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{5}
 }
 
 type Bank struct {
@@ -862,7 +878,7 @@ type Bank struct {
 
 func (x *Bank) Reset() {
 	*x = Bank{}
-	mi := &file_termwire_proto_msgTypes[6]
+	mi := &file_protocol_termwire_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -874,7 +890,7 @@ func (x *Bank) String() string {
 func (*Bank) ProtoMessage() {}
 
 func (x *Bank) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[6]
+	mi := &file_protocol_termwire_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -887,7 +903,7 @@ func (x *Bank) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Bank.ProtoReflect.Descriptor instead.
 func (*Bank) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{6}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *Bank) GetId() uint32 {
@@ -914,7 +930,7 @@ type GetBanksResponse struct {
 
 func (x *GetBanksResponse) Reset() {
 	*x = GetBanksResponse{}
-	mi := &file_termwire_proto_msgTypes[7]
+	mi := &file_protocol_termwire_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -926,7 +942,7 @@ func (x *GetBanksResponse) String() string {
 func (*GetBanksResponse) ProtoMessage() {}
 
 func (x *GetBanksResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[7]
+	mi := &file_protocol_termwire_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -939,7 +955,7 @@ func (x *GetBanksResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetBanksResponse.ProtoReflect.Descriptor instead.
 func (*GetBanksResponse) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{7}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *GetBanksResponse) GetCode() string {
@@ -970,7 +986,7 @@ type BankApplication struct {
 
 func (x *BankApplication) Reset() {
 	*x = BankApplication{}
-	mi := &file_termwire_proto_msgTypes[8]
+	mi := &file_protocol_termwire_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -982,7 +998,7 @@ func (x *BankApplication) String() string {
 func (*BankApplication) ProtoMessage() {}
 
 func (x *BankApplication) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[8]
+	mi := &file_protocol_termwire_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -995,7 +1011,7 @@ func (x *BankApplication) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BankApplication.ProtoReflect.Descriptor instead.
 func (*BankApplication) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{8}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *BankApplication) GetBankId() uint32 {
@@ -1051,7 +1067,7 @@ type CardInsertionRequest struct {
 
 func (x *CardInsertionRequest) Reset() {
 	*x = CardInsertionRequest{}
-	mi := &file_termwire_proto_msgTypes[9]
+	mi := &file_protocol_termwire_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1063,7 +1079,7 @@ func (x *CardInsertionRequest) String() string {
 func (*CardInsertionRequest) ProtoMessage() {}
 
 func (x *CardInsertionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[9]
+	mi := &file_protocol_termwire_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1076,7 +1092,7 @@ func (x *CardInsertionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CardInsertionRequest.ProtoReflect.Descriptor instead.
 func (*CardInsertionRequest) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{9}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *CardInsertionRequest) GetTransactionAmountCents() uint32 {
@@ -1113,7 +1129,7 @@ type CardInsertionResponse struct {
 
 func (x *CardInsertionResponse) Reset() {
 	*x = CardInsertionResponse{}
-	mi := &file_termwire_proto_msgTypes[10]
+	mi := &file_protocol_termwire_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1125,7 +1141,7 @@ func (x *CardInsertionResponse) String() string {
 func (*CardInsertionResponse) ProtoMessage() {}
 
 func (x *CardInsertionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[10]
+	mi := &file_protocol_termwire_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1138,7 +1154,7 @@ func (x *CardInsertionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CardInsertionResponse.ProtoReflect.Descriptor instead.
 func (*CardInsertionResponse) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{10}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *CardInsertionResponse) GetCode() string {
@@ -1189,7 +1205,7 @@ type PaymentProcessingRequest struct {
 
 func (x *PaymentProcessingRequest) Reset() {
 	*x = PaymentProcessingRequest{}
-	mi := &file_termwire_proto_msgTypes[11]
+	mi := &file_protocol_termwire_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1201,7 +1217,7 @@ func (x *PaymentProcessingRequest) String() string {
 func (*PaymentProcessingRequest) ProtoMessage() {}
 
 func (x *PaymentProcessingRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[11]
+	mi := &file_protocol_termwire_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1214,7 +1230,7 @@ func (x *PaymentProcessingRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PaymentProcessingRequest.ProtoReflect.Descriptor instead.
 func (*PaymentProcessingRequest) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{11}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *PaymentProcessingRequest) GetSelectedBankId() uint32 {
@@ -1265,7 +1281,7 @@ type LoyaltyCardInquiryResponse struct {
 
 func (x *LoyaltyCardInquiryResponse) Reset() {
 	*x = LoyaltyCardInquiryResponse{}
-	mi := &file_termwire_proto_msgTypes[12]
+	mi := &file_protocol_termwire_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1277,7 +1293,7 @@ func (x *LoyaltyCardInquiryResponse) String() string {
 func (*LoyaltyCardInquiryResponse) ProtoMessage() {}
 
 func (x *LoyaltyCardInquiryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[12]
+	mi := &file_protocol_termwire_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1290,7 +1306,7 @@ func (x *LoyaltyCardInquiryResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoyaltyCardInquiryResponse.ProtoReflect.Descriptor instead.
 func (*LoyaltyCardInquiryResponse) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{12}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *LoyaltyCardInquiryResponse) GetCode() string {
@@ -1339,7 +1355,7 @@ type LoyaltyPointsConfirmation struct {
 
 func (x *LoyaltyPointsConfirmation) Reset() {
 	*x = LoyaltyPointsConfirmation{}
-	mi := &file_termwire_proto_msgTypes[13]
+	mi := &file_protocol_termwire_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1351,7 +1367,7 @@ func (x *LoyaltyPointsConfirmation) String() string {
 func (*LoyaltyPointsConfirmation) ProtoMessage() {}
 
 func (x *LoyaltyPointsConfirmation) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[13]
+	mi := &file_protocol_termwire_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1364,7 +1380,7 @@ func (x *LoyaltyPointsConfirmation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoyaltyPointsConfirmation.ProtoReflect.Descriptor instead.
 func (*LoyaltyPointsConfirmation) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{13}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *LoyaltyPointsConfirmation) GetPointsToUse() uint32 {
@@ -1403,7 +1419,7 @@ type PaymentCompletionRequest struct {
 
 func (x *PaymentCompletionRequest) Reset() {
 	*x = PaymentCompletionRequest{}
-	mi := &file_termwire_proto_msgTypes[14]
+	mi := &file_protocol_termwire_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1415,7 +1431,7 @@ func (x *PaymentCompletionRequest) String() string {
 func (*PaymentCompletionRequest) ProtoMessage() {}
 
 func (x *PaymentCompletionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[14]
+	mi := &file_protocol_termwire_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1428,7 +1444,7 @@ func (x *PaymentCompletionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PaymentCompletionRequest.ProtoReflect.Descriptor instead.
 func (*PaymentCompletionRequest) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{14}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *PaymentCompletionRequest) GetBankId() uint32 {
@@ -1498,7 +1514,7 @@ type PaymentCompletionResponse struct {
 
 func (x *PaymentCompletionResponse) Reset() {
 	*x = PaymentCompletionResponse{}
-	mi := &file_termwire_proto_msgTypes[15]
+	mi := &file_protocol_termwire_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1510,7 +1526,7 @@ func (x *PaymentCompletionResponse) String() string {
 func (*PaymentCompletionResponse) ProtoMessage() {}
 
 func (x *PaymentCompletionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[15]
+	mi := &file_protocol_termwire_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1523,7 +1539,7 @@ func (x *PaymentCompletionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PaymentCompletionResponse.ProtoReflect.Descriptor instead.
 func (*PaymentCompletionResponse) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{15}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *PaymentCompletionResponse) GetCode() string {
@@ -1609,7 +1625,7 @@ type RefundTransactionRequest struct {
 
 func (x *RefundTransactionRequest) Reset() {
 	*x = RefundTransactionRequest{}
-	mi := &file_termwire_proto_msgTypes[16]
+	mi := &file_protocol_termwire_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1621,7 +1637,7 @@ func (x *RefundTransactionRequest) String() string {
 func (*RefundTransactionRequest) ProtoMessage() {}
 
 func (x *RefundTransactionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[16]
+	mi := &file_protocol_termwire_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1634,7 +1650,7 @@ func (x *RefundTransactionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RefundTransactionRequest.ProtoReflect.Descriptor instead.
 func (*RefundTransactionRequest) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{16}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *RefundTransactionRequest) GetOriginalTransactionId() string {
@@ -1686,7 +1702,7 @@ type RefundTransactionResponse struct {
 
 func (x *RefundTransactionResponse) Reset() {
 	*x = RefundTransactionResponse{}
-	mi := &file_termwire_proto_msgTypes[17]
+	mi := &file_protocol_termwire_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1698,7 +1714,7 @@ func (x *RefundTransactionResponse) String() string {
 func (*RefundTransactionResponse) ProtoMessage() {}
 
 func (x *RefundTransactionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[17]
+	mi := &file_protocol_termwire_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1711,7 +1727,7 @@ func (x *RefundTransactionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RefundTransactionResponse.ProtoReflect.Descriptor instead.
 func (*RefundTransactionResponse) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{17}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *RefundTransactionResponse) GetCode() string {
@@ -1768,7 +1784,7 @@ type VoidTransactionRequest struct {
 
 func (x *VoidTransactionRequest) Reset() {
 	*x = VoidTransactionRequest{}
-	mi := &file_termwire_proto_msgTypes[18]
+	mi := &file_protocol_termwire_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1780,7 +1796,7 @@ func (x *VoidTransactionRequest) String() string {
 func (*VoidTransactionRequest) ProtoMessage() {}
 
 func (x *VoidTransactionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[18]
+	mi := &file_protocol_termwire_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1793,7 +1809,7 @@ func (x *VoidTransactionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VoidTransactionRequest.ProtoReflect.Descriptor instead.
 func (*VoidTransactionRequest) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{18}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *VoidTransactionRequest) GetOriginalTransactionId() string {
@@ -1837,7 +1853,7 @@ type VoidTransactionResponse struct {
 
 func (x *VoidTransactionResponse) Reset() {
 	*x = VoidTransactionResponse{}
-	mi := &file_termwire_proto_msgTypes[19]
+	mi := &file_protocol_termwire_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1849,7 +1865,7 @@ func (x *VoidTransactionResponse) String() string {
 func (*VoidTransactionResponse) ProtoMessage() {}
 
 func (x *VoidTransactionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[19]
+	mi := &file_protocol_termwire_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1862,7 +1878,7 @@ func (x *VoidTransactionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VoidTransactionResponse.ProtoReflect.Descriptor instead.
 func (*VoidTransactionResponse) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{19}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *VoidTransactionResponse) GetCode() string {
@@ -1908,7 +1924,7 @@ type XReportRequest struct {
 
 func (x *XReportRequest) Reset() {
 	*x = XReportRequest{}
-	mi := &file_termwire_proto_msgTypes[20]
+	mi := &file_protocol_termwire_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1920,7 +1936,7 @@ func (x *XReportRequest) String() string {
 func (*XReportRequest) ProtoMessage() {}
 
 func (x *XReportRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[20]
+	mi := &file_protocol_termwire_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1933,7 +1949,7 @@ func (x *XReportRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use XReportRequest.ProtoReflect.Descriptor instead.
 func (*XReportRequest) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{20}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{20}
 }
 
 type XReportResponse struct {
@@ -1952,7 +1968,7 @@ type XReportResponse struct {
 
 func (x *XReportResponse) Reset() {
 	*x = XReportResponse{}
-	mi := &file_termwire_proto_msgTypes[21]
+	mi := &file_protocol_termwire_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1964,7 +1980,7 @@ func (x *XReportResponse) String() string {
 func (*XReportResponse) ProtoMessage() {}
 
 func (x *XReportResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[21]
+	mi := &file_protocol_termwire_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1977,7 +1993,7 @@ func (x *XReportResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use XReportResponse.ProtoReflect.Descriptor instead.
 func (*XReportResponse) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{21}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *XReportResponse) GetCode() string {
@@ -2044,7 +2060,7 @@ type ZReportRequest struct {
 
 func (x *ZReportRequest) Reset() {
 	*x = ZReportRequest{}
-	mi := &file_termwire_proto_msgTypes[22]
+	mi := &file_protocol_termwire_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2056,7 +2072,7 @@ func (x *ZReportRequest) String() string {
 func (*ZReportRequest) ProtoMessage() {}
 
 func (x *ZReportRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[22]
+	mi := &file_protocol_termwire_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2069,7 +2085,7 @@ func (x *ZReportRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ZReportRequest.ProtoReflect.Descriptor instead.
 func (*ZReportRequest) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{22}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{22}
 }
 
 type ZReportResponse struct {
@@ -2089,7 +2105,7 @@ type ZReportResponse struct {
 
 func (x *ZReportResponse) Reset() {
 	*x = ZReportResponse{}
-	mi := &file_termwire_proto_msgTypes[23]
+	mi := &file_protocol_termwire_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2101,7 +2117,7 @@ func (x *ZReportResponse) String() string {
 func (*ZReportResponse) ProtoMessage() {}
 
 func (x *ZReportResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[23]
+	mi := &file_protocol_termwire_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2114,7 +2130,7 @@ func (x *ZReportResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ZReportResponse.ProtoReflect.Descriptor instead.
 func (*ZReportResponse) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{23}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *ZReportResponse) GetCode() string {
@@ -2194,7 +2210,7 @@ type DetailedReportRequest struct {
 
 func (x *DetailedReportRequest) Reset() {
 	*x = DetailedReportRequest{}
-	mi := &file_termwire_proto_msgTypes[24]
+	mi := &file_protocol_termwire_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2206,7 +2222,7 @@ func (x *DetailedReportRequest) String() string {
 func (*DetailedReportRequest) ProtoMessage() {}
 
 func (x *DetailedReportRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[24]
+	mi := &file_protocol_termwire_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2219,7 +2235,7 @@ func (x *DetailedReportRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DetailedReportRequest.ProtoReflect.Descriptor instead.
 func (*DetailedReportRequest) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{24}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *DetailedReportRequest) GetFromTimestamp() string {
@@ -2285,7 +2301,7 @@ type TransactionEntry struct {
 
 func (x *TransactionEntry) Reset() {
 	*x = TransactionEntry{}
-	mi := &file_termwire_proto_msgTypes[25]
+	mi := &file_protocol_termwire_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2297,7 +2313,7 @@ func (x *TransactionEntry) String() string {
 func (*TransactionEntry) ProtoMessage() {}
 
 func (x *TransactionEntry) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[25]
+	mi := &file_protocol_termwire_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2310,7 +2326,7 @@ func (x *TransactionEntry) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TransactionEntry.ProtoReflect.Descriptor instead.
 func (*TransactionEntry) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{25}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *TransactionEntry) GetTransactionId() string {
@@ -2416,7 +2432,7 @@ type DetailedReportResponse struct {
 
 func (x *DetailedReportResponse) Reset() {
 	*x = DetailedReportResponse{}
-	mi := &file_termwire_proto_msgTypes[26]
+	mi := &file_protocol_termwire_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2428,7 +2444,7 @@ func (x *DetailedReportResponse) String() string {
 func (*DetailedReportResponse) ProtoMessage() {}
 
 func (x *DetailedReportResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[26]
+	mi := &file_protocol_termwire_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2441,7 +2457,7 @@ func (x *DetailedReportResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DetailedReportResponse.ProtoReflect.Descriptor instead.
 func (*DetailedReportResponse) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{26}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *DetailedReportResponse) GetCode() string {
@@ -2483,7 +2499,7 @@ type CurrencyTotals struct {
 
 func (x *CurrencyTotals) Reset() {
 	*x = CurrencyTotals{}
-	mi := &file_termwire_proto_msgTypes[27]
+	mi := &file_protocol_termwire_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2495,7 +2511,7 @@ func (x *CurrencyTotals) String() string {
 func (*CurrencyTotals) ProtoMessage() {}
 
 func (x *CurrencyTotals) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[27]
+	mi := &file_protocol_termwire_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2508,7 +2524,7 @@ func (x *CurrencyTotals) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CurrencyTotals.ProtoReflect.Descriptor instead.
 func (*CurrencyTotals) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{27}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *CurrencyTotals) GetCurrency() string {
@@ -2544,7 +2560,7 @@ type PaymentMethodTotals struct {
 
 func (x *PaymentMethodTotals) Reset() {
 	*x = PaymentMethodTotals{}
-	mi := &file_termwire_proto_msgTypes[28]
+	mi := &file_protocol_termwire_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2556,7 +2572,7 @@ func (x *PaymentMethodTotals) String() string {
 func (*PaymentMethodTotals) ProtoMessage() {}
 
 func (x *PaymentMethodTotals) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[28]
+	mi := &file_protocol_termwire_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2569,7 +2585,7 @@ func (x *PaymentMethodTotals) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PaymentMethodTotals.ProtoReflect.Descriptor instead.
 func (*PaymentMethodTotals) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{28}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *PaymentMethodTotals) GetMethod() PaymentMethod {
@@ -2610,7 +2626,7 @@ type GiftCardInquiryRequest struct {
 
 func (x *GiftCardInquiryRequest) Reset() {
 	*x = GiftCardInquiryRequest{}
-	mi := &file_termwire_proto_msgTypes[29]
+	mi := &file_protocol_termwire_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2622,7 +2638,7 @@ func (x *GiftCardInquiryRequest) String() string {
 func (*GiftCardInquiryRequest) ProtoMessage() {}
 
 func (x *GiftCardInquiryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[29]
+	mi := &file_protocol_termwire_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2635,7 +2651,7 @@ func (x *GiftCardInquiryRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GiftCardInquiryRequest.ProtoReflect.Descriptor instead.
 func (*GiftCardInquiryRequest) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{29}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *GiftCardInquiryRequest) GetCardNumber() string {
@@ -2664,7 +2680,7 @@ type GiftCardInquiryResponse struct {
 
 func (x *GiftCardInquiryResponse) Reset() {
 	*x = GiftCardInquiryResponse{}
-	mi := &file_termwire_proto_msgTypes[30]
+	mi := &file_protocol_termwire_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2676,7 +2692,7 @@ func (x *GiftCardInquiryResponse) String() string {
 func (*GiftCardInquiryResponse) ProtoMessage() {}
 
 func (x *GiftCardInquiryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[30]
+	mi := &file_protocol_termwire_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2689,7 +2705,7 @@ func (x *GiftCardInquiryResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GiftCardInquiryResponse.ProtoReflect.Descriptor instead.
 func (*GiftCardInquiryResponse) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{30}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *GiftCardInquiryResponse) GetCode() string {
@@ -2732,7 +2748,7 @@ type GiftCardChargeRequest struct {
 
 func (x *GiftCardChargeRequest) Reset() {
 	*x = GiftCardChargeRequest{}
-	mi := &file_termwire_proto_msgTypes[31]
+	mi := &file_protocol_termwire_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2744,7 +2760,7 @@ func (x *GiftCardChargeRequest) String() string {
 func (*GiftCardChargeRequest) ProtoMessage() {}
 
 func (x *GiftCardChargeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[31]
+	mi := &file_protocol_termwire_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2757,7 +2773,7 @@ func (x *GiftCardChargeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GiftCardChargeRequest.ProtoReflect.Descriptor instead.
 func (*GiftCardChargeRequest) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{31}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *GiftCardChargeRequest) GetCardNumber() string {
@@ -2801,7 +2817,7 @@ type GiftCardChargeResponse struct {
 
 func (x *GiftCardChargeResponse) Reset() {
 	*x = GiftCardChargeResponse{}
-	mi := &file_termwire_proto_msgTypes[32]
+	mi := &file_protocol_termwire_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2813,7 +2829,7 @@ func (x *GiftCardChargeResponse) String() string {
 func (*GiftCardChargeResponse) ProtoMessage() {}
 
 func (x *GiftCardChargeResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_termwire_proto_msgTypes[32]
+	mi := &file_protocol_termwire_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2826,7 +2842,7 @@ func (x *GiftCardChargeResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GiftCardChargeResponse.ProtoReflect.Descriptor instead.
 func (*GiftCardChargeResponse) Descriptor() ([]byte, []int) {
-	return file_termwire_proto_rawDescGZIP(), []int{32}
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *GiftCardChargeResponse) GetCode() string {
@@ -2864,11 +2880,63 @@ func (x *GiftCardChargeResponse) GetCurrency() string {
 	return ""
 }
 
-var File_termwire_proto protoreflect.FileDescriptor
+type ErrorResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
 
-const file_termwire_proto_rawDesc = "" +
+func (x *ErrorResponse) Reset() {
+	*x = ErrorResponse{}
+	mi := &file_protocol_termwire_proto_msgTypes[33]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ErrorResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ErrorResponse) ProtoMessage() {}
+
+func (x *ErrorResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_protocol_termwire_proto_msgTypes[33]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ErrorResponse.ProtoReflect.Descriptor instead.
+func (*ErrorResponse) Descriptor() ([]byte, []int) {
+	return file_protocol_termwire_proto_rawDescGZIP(), []int{33}
+}
+
+func (x *ErrorResponse) GetCode() string {
+	if x != nil {
+		return x.Code
+	}
+	return ""
+}
+
+func (x *ErrorResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+var File_protocol_termwire_proto protoreflect.FileDescriptor
+
+const file_protocol_termwire_proto_rawDesc = "" +
 	"\n" +
-	"\x0etermwire.proto\x12\btermwire\"\xd6\x13\n" +
+	"\x17protocol/termwire.proto\x12\btermwire\"\x98\x14\n" +
 	"\aMessage\x12\x1d\n" +
 	"\n" +
 	"message_id\x18\x01 \x01(\tR\tmessageId\x12\x1c\n" +
@@ -2900,7 +2968,8 @@ const file_termwire_proto_rawDesc = "" +
 	"\x19gift_card_inquiry_request\x18F \x01(\v2 .termwire.GiftCardInquiryRequestH\x00R\x16giftCardInquiryRequest\x12`\n" +
 	"\x1agift_card_inquiry_response\x18G \x01(\v2!.termwire.GiftCardInquiryResponseH\x00R\x17giftCardInquiryResponse\x12Z\n" +
 	"\x18gift_card_charge_request\x18H \x01(\v2\x1f.termwire.GiftCardChargeRequestH\x00R\x15giftCardChargeRequest\x12]\n" +
-	"\x19gift_card_charge_response\x18I \x01(\v2 .termwire.GiftCardChargeResponseH\x00R\x16giftCardChargeResponseB\x06\n" +
+	"\x19gift_card_charge_response\x18I \x01(\v2 .termwire.GiftCardChargeResponseH\x00R\x16giftCardChargeResponse\x12@\n" +
+	"\x0eerror_response\x18c \x01(\v2\x17.termwire.ErrorResponseH\x00R\rerrorResponseB\x06\n" +
 	"\x04body\"\x13\n" +
 	"\x11GetVersionRequest\"B\n" +
 	"\x12GetVersionResponse\x12\x12\n" +
@@ -3075,7 +3144,10 @@ const file_termwire_proto_rawDesc = "" +
 	"\x11new_balance_cents\x18\x02 \x01(\rR\x0fnewBalanceCents\x12#\n" +
 	"\rpoints_earned\x18\x03 \x01(\rR\fpointsEarned\x12\x18\n" +
 	"\amessage\x18\x04 \x01(\tR\amessage\x12\x1a\n" +
-	"\bcurrency\x18\x05 \x01(\tR\bcurrency*Z\n" +
+	"\bcurrency\x18\x05 \x01(\tR\bcurrency\"=\n" +
+	"\rErrorResponse\x12\x12\n" +
+	"\x04code\x18\x01 \x01(\tR\x04code\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage*Z\n" +
 	"\x0fTransactionType\x12\b\n" +
 	"\x04SALE\x10\x00\x12\n" +
 	"\n" +
@@ -3095,20 +3167,20 @@ const file_termwire_proto_rawDesc = "" +
 	"\x1bcom.sirfi.termwire.protocolB\rTermwireProtoZ\"github.com/sirfi/termwire/protocol\xaa\x02\x17Sirfi.Termwire.Protocolb\x06proto3"
 
 var (
-	file_termwire_proto_rawDescOnce sync.Once
-	file_termwire_proto_rawDescData []byte
+	file_protocol_termwire_proto_rawDescOnce sync.Once
+	file_protocol_termwire_proto_rawDescData []byte
 )
 
-func file_termwire_proto_rawDescGZIP() []byte {
-	file_termwire_proto_rawDescOnce.Do(func() {
-		file_termwire_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_termwire_proto_rawDesc), len(file_termwire_proto_rawDesc)))
+func file_protocol_termwire_proto_rawDescGZIP() []byte {
+	file_protocol_termwire_proto_rawDescOnce.Do(func() {
+		file_protocol_termwire_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_protocol_termwire_proto_rawDesc), len(file_protocol_termwire_proto_rawDesc)))
 	})
-	return file_termwire_proto_rawDescData
+	return file_protocol_termwire_proto_rawDescData
 }
 
-var file_termwire_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_termwire_proto_msgTypes = make([]protoimpl.MessageInfo, 33)
-var file_termwire_proto_goTypes = []any{
+var file_protocol_termwire_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_protocol_termwire_proto_msgTypes = make([]protoimpl.MessageInfo, 34)
+var file_protocol_termwire_proto_goTypes = []any{
 	(TransactionType)(0),               // 0: termwire.TransactionType
 	(PaymentMethod)(0),                 // 1: termwire.PaymentMethod
 	(*Message)(nil),                    // 2: termwire.Message
@@ -3144,8 +3216,9 @@ var file_termwire_proto_goTypes = []any{
 	(*GiftCardInquiryResponse)(nil),    // 32: termwire.GiftCardInquiryResponse
 	(*GiftCardChargeRequest)(nil),      // 33: termwire.GiftCardChargeRequest
 	(*GiftCardChargeResponse)(nil),     // 34: termwire.GiftCardChargeResponse
+	(*ErrorResponse)(nil),              // 35: termwire.ErrorResponse
 }
-var file_termwire_proto_depIdxs = []int32{
+var file_protocol_termwire_proto_depIdxs = []int32{
 	3,  // 0: termwire.Message.get_version_request:type_name -> termwire.GetVersionRequest
 	4,  // 1: termwire.Message.get_version_response:type_name -> termwire.GetVersionResponse
 	5,  // 2: termwire.Message.get_terminal_info_request:type_name -> termwire.GetTerminalInfoRequest
@@ -3173,33 +3246,34 @@ var file_termwire_proto_depIdxs = []int32{
 	32, // 24: termwire.Message.gift_card_inquiry_response:type_name -> termwire.GiftCardInquiryResponse
 	33, // 25: termwire.Message.gift_card_charge_request:type_name -> termwire.GiftCardChargeRequest
 	34, // 26: termwire.Message.gift_card_charge_response:type_name -> termwire.GiftCardChargeResponse
-	8,  // 27: termwire.GetBanksResponse.banks:type_name -> termwire.Bank
-	10, // 28: termwire.CardInsertionResponse.available_banks:type_name -> termwire.BankApplication
-	29, // 29: termwire.XReportResponse.sales_totals:type_name -> termwire.CurrencyTotals
-	29, // 30: termwire.XReportResponse.refund_totals:type_name -> termwire.CurrencyTotals
-	29, // 31: termwire.XReportResponse.void_totals:type_name -> termwire.CurrencyTotals
-	30, // 32: termwire.XReportResponse.payment_method_totals:type_name -> termwire.PaymentMethodTotals
-	29, // 33: termwire.ZReportResponse.sales_totals:type_name -> termwire.CurrencyTotals
-	29, // 34: termwire.ZReportResponse.refund_totals:type_name -> termwire.CurrencyTotals
-	29, // 35: termwire.ZReportResponse.void_totals:type_name -> termwire.CurrencyTotals
-	30, // 36: termwire.ZReportResponse.payment_method_totals:type_name -> termwire.PaymentMethodTotals
-	0,  // 37: termwire.TransactionEntry.type:type_name -> termwire.TransactionType
-	1,  // 38: termwire.TransactionEntry.payment_method:type_name -> termwire.PaymentMethod
-	27, // 39: termwire.DetailedReportResponse.transactions:type_name -> termwire.TransactionEntry
-	1,  // 40: termwire.PaymentMethodTotals.method:type_name -> termwire.PaymentMethod
-	41, // [41:41] is the sub-list for method output_type
-	41, // [41:41] is the sub-list for method input_type
-	41, // [41:41] is the sub-list for extension type_name
-	41, // [41:41] is the sub-list for extension extendee
-	0,  // [0:41] is the sub-list for field type_name
+	35, // 27: termwire.Message.error_response:type_name -> termwire.ErrorResponse
+	8,  // 28: termwire.GetBanksResponse.banks:type_name -> termwire.Bank
+	10, // 29: termwire.CardInsertionResponse.available_banks:type_name -> termwire.BankApplication
+	29, // 30: termwire.XReportResponse.sales_totals:type_name -> termwire.CurrencyTotals
+	29, // 31: termwire.XReportResponse.refund_totals:type_name -> termwire.CurrencyTotals
+	29, // 32: termwire.XReportResponse.void_totals:type_name -> termwire.CurrencyTotals
+	30, // 33: termwire.XReportResponse.payment_method_totals:type_name -> termwire.PaymentMethodTotals
+	29, // 34: termwire.ZReportResponse.sales_totals:type_name -> termwire.CurrencyTotals
+	29, // 35: termwire.ZReportResponse.refund_totals:type_name -> termwire.CurrencyTotals
+	29, // 36: termwire.ZReportResponse.void_totals:type_name -> termwire.CurrencyTotals
+	30, // 37: termwire.ZReportResponse.payment_method_totals:type_name -> termwire.PaymentMethodTotals
+	0,  // 38: termwire.TransactionEntry.type:type_name -> termwire.TransactionType
+	1,  // 39: termwire.TransactionEntry.payment_method:type_name -> termwire.PaymentMethod
+	27, // 40: termwire.DetailedReportResponse.transactions:type_name -> termwire.TransactionEntry
+	1,  // 41: termwire.PaymentMethodTotals.method:type_name -> termwire.PaymentMethod
+	42, // [42:42] is the sub-list for method output_type
+	42, // [42:42] is the sub-list for method input_type
+	42, // [42:42] is the sub-list for extension type_name
+	42, // [42:42] is the sub-list for extension extendee
+	0,  // [0:42] is the sub-list for field type_name
 }
 
-func init() { file_termwire_proto_init() }
-func file_termwire_proto_init() {
-	if File_termwire_proto != nil {
+func init() { file_protocol_termwire_proto_init() }
+func file_protocol_termwire_proto_init() {
+	if File_protocol_termwire_proto != nil {
 		return
 	}
-	file_termwire_proto_msgTypes[0].OneofWrappers = []any{
+	file_protocol_termwire_proto_msgTypes[0].OneofWrappers = []any{
 		(*Message_GetVersionRequest)(nil),
 		(*Message_GetVersionResponse)(nil),
 		(*Message_GetTerminalInfoRequest)(nil),
@@ -3227,23 +3301,24 @@ func file_termwire_proto_init() {
 		(*Message_GiftCardInquiryResponse)(nil),
 		(*Message_GiftCardChargeRequest)(nil),
 		(*Message_GiftCardChargeResponse)(nil),
+		(*Message_ErrorResponse)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_termwire_proto_rawDesc), len(file_termwire_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_protocol_termwire_proto_rawDesc), len(file_protocol_termwire_proto_rawDesc)),
 			NumEnums:      2,
-			NumMessages:   33,
+			NumMessages:   34,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_termwire_proto_goTypes,
-		DependencyIndexes: file_termwire_proto_depIdxs,
-		EnumInfos:         file_termwire_proto_enumTypes,
-		MessageInfos:      file_termwire_proto_msgTypes,
+		GoTypes:           file_protocol_termwire_proto_goTypes,
+		DependencyIndexes: file_protocol_termwire_proto_depIdxs,
+		EnumInfos:         file_protocol_termwire_proto_enumTypes,
+		MessageInfos:      file_protocol_termwire_proto_msgTypes,
 	}.Build()
-	File_termwire_proto = out.File
-	file_termwire_proto_goTypes = nil
-	file_termwire_proto_depIdxs = nil
+	File_protocol_termwire_proto = out.File
+	file_protocol_termwire_proto_goTypes = nil
+	file_protocol_termwire_proto_depIdxs = nil
 }

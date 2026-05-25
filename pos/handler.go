@@ -464,18 +464,14 @@ func (h *MessageHandler) handleGiftCardCharge(msg *pb.Message, req *pb.GiftCardC
 func (h *MessageHandler) createErrorResponse(messageID, code, errorMsg string) *pb.Message {
 	log.Printf("[HANDLER] Error response - Code: %s, Message: %s", code, errorMsg)
 
-	// For simplicity, we'll use CardInsertionResponse as error response
-	// In production, you might want a dedicated error message type
-	response := &pb.CardInsertionResponse{
-		Code:    code,
-		Message: errorMsg,
-	}
-
 	return &pb.Message{
 		MessageId: generateMessageID(),
 		Timestamp: time.Now().Format(time.RFC3339),
-		Body: &pb.Message_CardInsertionResponse{
-			CardInsertionResponse: response,
+		Body: &pb.Message_ErrorResponse{
+			ErrorResponse: &pb.ErrorResponse{
+				Code:    code,
+				Message: errorMsg,
+			},
 		},
 	}
 }

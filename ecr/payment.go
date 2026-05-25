@@ -201,40 +201,6 @@ func (pf *PaymentFlow) ExecuteInstallmentPayment(transactionID string, amountCen
 
 // PrintReceipt prints a receipt for a payment result
 func (pf *PaymentFlow) PrintReceipt(result *PaymentResult, currency string) {
-	fmt.Println("\n" + strings.Repeat("=", 50))
-	fmt.Println("                    RECEIPT                    ")
-	fmt.Println(strings.Repeat("=", 50))
-
-	if result.Success {
-		fmt.Printf("Transaction ID:    %s\n", result.TransactionID)
-		fmt.Printf("Receipt Number:    %s\n", result.ReceiptNumber)
-		fmt.Printf("Confirmation Code: %s\n", result.ConfirmationCode)
-		fmt.Printf("Auth Code:         %s\n", result.AuthCode)
-		fmt.Println(strings.Repeat("-", 50))
-		fmt.Printf("Card Number:       %s\n", result.CardNumberMasked)
-		fmt.Printf("Card Holder:       %s\n", result.CardHolderName)
-		fmt.Println(strings.Repeat("-", 50))
-
-		totalAmount := result.CardAmountCents + result.LoyaltyAmountCents
-		fmt.Printf("Total Amount:      %.2f %s\n", float64(totalAmount)/100.0, currency)
-
-		if result.LoyaltyAmountCents > 0 {
-			fmt.Printf("Loyalty Discount:  %.2f %s\n", float64(result.LoyaltyAmountCents)/100.0, currency)
-			fmt.Printf("Card Amount:       %.2f %s\n", float64(result.CardAmountCents)/100.0, currency)
-			fmt.Printf("Remaining Points:  %d\n", result.RemainingPoints)
-		}
-	} else {
-		fmt.Println("           TRANSACTION FAILED           ")
-		fmt.Printf("Error Code: %s\n", result.ErrorCode)
-		fmt.Printf("Error Message: %s\n", result.ErrorMessage)
-	}
-
-	fmt.Println(strings.Repeat("=", 50))
-	fmt.Println()
-}
-
-// UpdatedPrintReceipt prints a receipt with proper formatting
-func (pf *PaymentFlow) UpdatedPrintReceipt(result *PaymentResult, currency string) {
 	fmt.Println()
 	fmt.Println(strings.Repeat("=", 50))
 	fmt.Println("                    RECEIPT                    ")

@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/sirfi/termwire/pos"
 )
@@ -61,7 +62,14 @@ func main() {
 }
 
 func printStatsPeriodically(server *pos.Server) {
-	// Print stats every 60 seconds
-	// In a real implementation, you would use a ticker here
-	// For simplicity, we'll skip this for now
+	ticker := time.NewTicker(60 * time.Second)
+	defer ticker.Stop()
+
+	for range ticker.C {
+		stats := server.GetStats()
+		log.Println("[STATS] === Server Statistics ===")
+		for k, v := range stats {
+			log.Printf("[STATS]   %s: %v", k, v)
+		}
+	}
 }

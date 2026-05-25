@@ -47,7 +47,7 @@ func main() {
 	}
 
 	fmt.Println("\n=== Original Transaction Successful ===")
-	paymentFlow.UpdatedPrintReceipt(originalResult, "TRY")
+	paymentFlow.PrintReceipt(originalResult, "TRY")
 
 	originalTxnID := originalResult.TransactionID
 	originalConfCode := originalResult.ConfirmationCode
@@ -97,7 +97,7 @@ func main() {
 	}
 
 	fmt.Println("\n=== Second Transaction Successful ===")
-	paymentFlow.UpdatedPrintReceipt(voidOriginalResult, "TRY")
+	paymentFlow.PrintReceipt(voidOriginalResult, "TRY")
 
 	voidTxnID := voidOriginalResult.TransactionID
 	voidConfCode := voidOriginalResult.ConfirmationCode
@@ -144,7 +144,7 @@ func main() {
 	}
 
 	fmt.Println("\n=== Third Transaction Successful ===")
-	paymentFlow.UpdatedPrintReceipt(fullRefundOriginal, "TRY")
+	paymentFlow.PrintReceipt(fullRefundOriginal, "TRY")
 
 	// Full refund
 	fmt.Println("\n=== Step 6: Full Refund ===")

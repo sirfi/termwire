@@ -61,14 +61,14 @@ func main() {
 	if err != nil {
 		log.Printf("Payment failed: %v", err)
 		if result != nil {
-			paymentFlow.UpdatedPrintReceipt(result, "TRY")
+			paymentFlow.PrintReceipt(result, "TRY")
 		}
 		return
 	}
 
 	// Print receipt
 	fmt.Println("\n=== Payment Successful ===")
-	paymentFlow.UpdatedPrintReceipt(result, "TRY")
+	paymentFlow.PrintReceipt(result, "TRY")
 
 	fmt.Println("Simple payment example completed successfully!")
 }
