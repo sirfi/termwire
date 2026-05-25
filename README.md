@@ -72,21 +72,22 @@ CardInsertionRequest
  CARD_INSERTION
         │ card read OK
         ▼
- BANK_SELECTION ──────────────────────────────────────────────────────┐
+ BANK_SELECTION ───────────────────────────────────────────────────────┐
         │ PaymentProcessingRequest                                     │
         │ (use_loyalty_points=false OR card has no loyalty)            │
         ▼                                                              │
- PAYMENT_PROCESSING ◄─────────────────────────────────────────────────┤
+ PAYMENT_PROCESSING ◄──────────────────────────────────────────────────┤
         │ PaymentProcessingRequest (use_loyalty_points=true,           │
         │                           card has loyalty)                  │
         │                                                              │
-        │                                                   LOYALTY_INQUIRY
-        │                                                              │ LoyaltyPointsConfirmation
+        │                                                       LOYALTY_INQUIRY
+        │                                                              │
+        │ LoyaltyPointsConfirmation                                    │
         │                                                              ▼
-        │                                                  LOYALTY_CONFIRMATION
+        │                                                     LOYALTY_CONFIRMATION
         │                                                              │
         │                                                              ▼
-        │                                                   PAYMENT_PROCESSING
+        │                                                      PAYMENT_PROCESSING
         │
         ├── success ──► PAYMENT_COMPLETED ──► VOIDED
         │                                └──► REFUNDED
