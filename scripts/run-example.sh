@@ -57,7 +57,7 @@ fi
 POS_LOG="$ROOT/bin/pos-terminal.log"
 echo "[server] starting POS terminal (log: bin/pos-terminal.log)"
 cd "$ROOT"
-env "${POS_ENV[@]}" "$BIN/pos-terminal" >"$POS_LOG" 2>&1 &
+env "${POS_ENV[@]+"${POS_ENV[@]}"}" "$BIN/pos-terminal" >"$POS_LOG" 2>&1 &
 POS_PID=$!
 
 cleanup() {
