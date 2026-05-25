@@ -61,7 +61,59 @@ Each frame has the following structure:
 - `DATA` (3): Data frame containing Protobuf messages
 - `CLOSE` (4): Connection close request
 
+## Transaction State Machine
+
+Each payment on the POS side progresses through the following states:
+
+```
+CardInsertionRequest
+        │
+        ▼
+ CARD_INSERTION
+        │ card read OK
+        ▼
+ BANK_SELECTION ──────────────────────────────────────────────────────┐
+        │ PaymentProcessingRequest                                     │
+        │ (use_loyalty_points=false OR card has no loyalty)            │
+        ▼                                                              │
+ PAYMENT_PROCESSING ◄─────────────────────────────────────────────────┤
+        │ PaymentProcessingRequest (use_loyalty_points=true,           │
+        │                           card has loyalty)                  │
+        │                                                              │
+        │                                                   LOYALTY_INQUIRY
+        │                                                              │ LoyaltyPointsConfirmation
+        │                                                              ▼
+        │                                                  LOYALTY_CONFIRMATION
+        │                                                              │
+        │                                                              ▼
+        │                                                   PAYMENT_PROCESSING
+        │
+        ├── success ──► PAYMENT_COMPLETED ──► VOIDED
+        │                                └──► REFUNDED
+        │
+        └── declined ──► FAILED
+```
+
+- Active transactions (states before `PAYMENT_COMPLETED`) are held **in-memory** only.
+- Terminal states (`PAYMENT_COMPLETED`, `FAILED`, `VOIDED`, `REFUNDED`) are **persisted to SQLite**.
+- The `message_id` on requests acts as an idempotency key — duplicate requests return the cached response.
+
 ## Quick Start
+
+### One-liner (recommended)
+
+The `run-example.sh` script builds everything, starts the POS server in the background, waits for it to become ready, runs the chosen example, and stops the server automatically on exit.
+
+```bash
+# Simple payment (requires TLS certs — run gen-certs.sh first)
+bash scripts/gen-certs.sh
+bash scripts/run-example.sh simple_payment
+
+# Other examples (plain TCP, no certs needed)
+bash scripts/run-example.sh loyalty_payment
+bash scripts/run-example.sh refund_void
+bash scripts/run-example.sh reports
+```
 
 ### Running the POS Terminal
 
@@ -146,64 +198,76 @@ import (
 )
 
 func main() {
-    config := ecr.DefaultConfig()
-    client := ecr.NewClient(config)
+    config := ecr.DefaultConfig() // connects to localhost:8080
+    api := ecr.NewAPI(config)
 
-    if err := client.Connect(); err != nil {
+    if err := api.Connect(); err != nil {
         log.Fatal(err)
     }
-    defer client.Disconnect()
+    defer api.Disconnect()
 
-    confirmation, receipt, auth, err := client.SimplePayment(
-        "TX-001",           // Transaction ID
-        10000,              // Amount in cents (100.00)
-        "TRY",              // Currency
-        1,                  // Bank ID
-        "A0000000041010",   // AID
-        0,                  // Installments
+    flow := ecr.NewPaymentFlow(api)
+    result, err := flow.ExecuteSimplePayment(
+        "TX-001", // Transaction ID (idempotency key — preserve on retries)
+        10000,    // Amount in cents (100.00 TRY)
+        "TRY",    // Currency (ISO 4217)
     )
     if err != nil {
         log.Fatal(err)
     }
 
-    log.Printf("Payment successful! Confirmation: %s", confirmation)
-    _ = receipt
-    _ = auth
+    log.Printf("Payment successful! Confirmation: %s", result.ConfirmationCode)
+    log.Printf("Receipt: %s, Auth: %s", result.ReceiptNumber, result.AuthCode)
 }
 ```
 
-### Payment Flow with Loyalty
+### Payment Flow with Loyalty (high-level)
 
 ```go
-flow, err := client.StartPayment("TX-001", 20000, "TRY")
+// ExecuteLoyaltyPayment handles the full loyalty inquiry + confirmation flow automatically.
+// Pass 0 as loyaltyPoints to use all available points; or pass a specific amount to cap usage.
+result, err := flow.ExecuteLoyaltyPayment("TX-001", 20000, "TRY", 0)
 if err != nil {
     log.Fatal(err)
 }
 
-cardMasked, cardHolder := flow.GetCardInfo()
-log.Printf("Card: %s, Holder: %s", cardMasked, cardHolder)
+log.Printf("Card charged: %.2f TRY", float64(result.CardAmountCents)/100.0)
+log.Printf("Loyalty discount: %.2f TRY", float64(result.LoyaltyAmountCents)/100.0)
+log.Printf("Remaining points: %d", result.RemainingPoints)
+```
 
-banks := flow.GetAvailableBanks()
-if err := flow.SelectBank(banks[0].BankId, banks[0].Aid, 0, true); err != nil {
+### Payment Flow with Loyalty (manual, fine-grained)
+
+```go
+// Step 1: Insert card and get available bank applications
+cardResp, err := api.InsertCard("TX-001", 20000, "TRY")
+if err != nil {
+    log.Fatal(err)
+}
+log.Printf("Card: %s, Holder: %s", cardResp.CardNumberMasked, cardResp.CardHolderName)
+
+bank := cardResp.AvailableBanks[0] // pick preferred bank
+
+// Step 2: Send bank selection; receive loyalty inquiry if card supports it
+paymentResp, loyaltyResp, err := api.ProcessPayment(
+    "TX-001", bank.BankId, bank.Aid, 0 /*installments*/, bank.SupportsLoyalty)
+if err != nil {
     log.Fatal(err)
 }
 
-if flow.HasLoyalty() {
-    points, value := flow.GetLoyaltyInfo()
-    log.Printf("Available: %d points (%.2f TRY)", points, float64(value)/100.0)
-    if err := flow.ConfirmLoyaltyPoints(points / 2); err != nil {
+// Step 3: Handle loyalty — only present when loyaltyResp != nil
+if loyaltyResp != nil {
+    log.Printf("Available: %d points (%.2f TRY)",
+        loyaltyResp.AvailablePoints, float64(loyaltyResp.PointsValueCents)/100.0)
+
+    pointsToUse := loyaltyResp.AvailablePoints / 2
+    paymentResp, err = api.ConfirmLoyaltyPoints("TX-001", pointsToUse, pointsToUse)
+    if err != nil {
         log.Fatal(err)
     }
 }
 
-if err := flow.Complete(); err != nil {
-    log.Fatal(err)
-}
-
-confirmation, receipt, auth := flow.GetResult()
-log.Printf("Success! Confirmation: %s", confirmation)
-_ = receipt
-_ = auth
+log.Printf("Success! Confirmation: %s", paymentResp.ConfirmationCode)
 ```
 
 ## Message Types
@@ -284,6 +348,26 @@ config := &ecr.Config{
     TLSServerName:   "localhost",
     LogLevel:        slog.LevelInfo,
 }
+```
+
+### POS Environment Variables
+
+The `pos/cmd` binary reads the following environment variables at startup. All are optional; unset variables fall back to `DefaultConfig()` values.
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `POS_HOST` | `0.0.0.0` | TCP bind address |
+| `POS_PORT` | `8080` | TCP port |
+| `POS_TERMINAL_ID` | `POS-001` | Terminal identifier string |
+| `POS_TLS_ENABLED` | `false` | Set to `true` to enable TLS |
+| `POS_TLS_CERT` | `certs/server.crt` | Server certificate (PEM) — used when TLS enabled |
+| `POS_TLS_KEY` | `certs/server.key` | Server private key (PEM) — used when TLS enabled |
+| `POS_TLS_CA` | `certs/ca.crt` | CA certificate — enables mTLS when set |
+| `POS_DB_FILE` | `pos-terminal.db` | SQLite database path; use `:memory:` for ephemeral runs |
+
+```bash
+# Example: run with mTLS on a custom port, separate DB
+POS_TLS_ENABLED=true POS_PORT=9090 POS_DB_FILE=/data/txn.db ./bin/pos-terminal
 ```
 
 ## TLS / mTLS

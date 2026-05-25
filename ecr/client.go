@@ -1,3 +1,26 @@
+// Package ecr implements the Termwire ECR (Electronic Cash Register) TCP client.
+//
+// The package provides two layers of abstraction:
+//
+//   - [Client] — low-level connection management (connect, disconnect, send/receive frames).
+//   - [API] — mid-level typed message helpers (InsertCard, ProcessPayment, GetXReport, …).
+//   - [PaymentFlow] — high-level orchestration of the multi-step card payment flow,
+//     including optional loyalty point inquiry and confirmation.
+//
+// # Typical usage
+//
+//	api := ecr.NewAPI(ecr.DefaultConfig())
+//	if err := api.Connect(); err != nil { log.Fatal(err) }
+//	defer api.Disconnect()
+//
+//	flow := ecr.NewPaymentFlow(api)
+//	result, err := flow.ExecuteSimplePayment("TX-001", 10000, "TRY")
+//
+// # Retries and idempotency
+//
+// [Client.SendMessage] retries up to [Config.MaxRetries] times on transient
+// network errors. The original message_id is preserved across retries so the
+// POS server can return a cached idempotent response.
 package ecr
 
 import (

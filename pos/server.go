@@ -1,3 +1,24 @@
+// Package pos implements the Termwire POS terminal TCP server.
+//
+// The server accepts connections from ECR clients and processes Termwire
+// protocol messages. Each connection is handled in its own goroutine.
+// Idle connections are closed after [Config.IdleTimeout].
+//
+// # Starting the server
+//
+//	cfg := pos.DefaultConfig()
+//	srv, err := pos.NewServer(cfg)
+//	if err != nil { log.Fatal(err) }
+//	if err := srv.Start(); err != nil { log.Fatal(err) }
+//	defer srv.Stop()
+//
+// # Transaction lifecycle
+//
+// Active transactions are held in memory by [TransactionManager].
+// Completed, failed, voided, and refunded transactions are persisted
+// to the SQLite database specified by [Config.DBFile].
+// X-reports aggregate the current open batch (z_report_id = 0).
+// Z-reports close the batch and increment the batch counter.
 package pos
 
 import (

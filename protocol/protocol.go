@@ -1,3 +1,16 @@
+// Package protocol implements the Termwire binary frame codec and contains
+// the generated Protobuf message definitions.
+//
+// # Wire Frame Layout
+//
+//	[STX 1B][MAGIC 2B='TW'][VER 1B][LEN 2B][TYPE 1B][SEQ 2B][FLAGS 1B][PAYLOAD NB][CRC32 4B][ETX 1B]
+//
+// CRC32 (IEEE) is computed over: Version, Type, Sequence (2 bytes), Payload.
+// Multi-byte integer fields use big-endian byte order.
+//
+// Use [NewFrame] to construct frames, [ParseFrame] or [ReadFrame] to decode them,
+// and [Frame.Serialize] to encode them for transmission.
+//
 //go:generate protoc --go_out=. --go_opt=paths=source_relative --proto_path=. termwire.proto
 
 package protocol
