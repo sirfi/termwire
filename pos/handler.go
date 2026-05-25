@@ -18,13 +18,22 @@ type MessageHandler struct {
 }
 
 // NewMessageHandler creates a new message handler
-func NewMessageHandler(config *Config) *MessageHandler {
+func NewMessageHandler(config *Config) (*MessageHandler, error) {
+	tm, err := NewTransactionManager(config)
+	if err != nil {
+		return nil, fmt.Errorf("creating transaction manager: %w", err)
+	}
 	return &MessageHandler{
 		config:     config,
-		txnManager: NewTransactionManager(config),
+		txnManager: tm,
 		cardReader: NewCardReader(),
 		logger:     slog.Default(),
-	}
+	}, nil
+}
+
+// Close releases resources held by the handler.
+func (h *MessageHandler) Close() error {
+	return h.txnManager.Close()
 }
 
 // HandleMessage processes an incoming message and returns a response
@@ -262,6 +271,7 @@ func (h *MessageHandler) processPayment(txn *Transaction) (*pb.Message, error) {
 
 	// Cache for idempotent retries.
 	txn.CachedResponse = response
+	h.txnManager.SetCachedResponse(txn.ID, response)
 
 	return &pb.Message{
 		MessageId: generateMessageID(),

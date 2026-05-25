@@ -31,6 +31,9 @@ func main() {
 		config.TLSKeyFile = getEnv("POS_TLS_KEY", "certs/server.key")
 		config.TLSCAFile = getEnv("POS_TLS_CA", "certs/ca.crt")
 	}
+	if dbFile := os.Getenv("POS_DB_FILE"); dbFile != "" {
+		config.DBFile = dbFile
+	}
 
 	logger := slog.New(slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{Level: config.LogLevel}))
 	logger.Info("starting Termwire POS terminal",
@@ -42,7 +45,11 @@ func main() {
 	)
 
 	// Create and start server
-	server := pos.NewServer(config)
+	server, err := pos.NewServer(config)
+	if err != nil {
+		logger.Error("failed to create server", slog.Any("error", err))
+		os.Exit(1)
+	}
 	if err := server.Start(); err != nil {
 		logger.Error("failed to start server", slog.Any("error", err))
 		os.Exit(1)

@@ -31,6 +31,9 @@ type Config struct {
 	TLSKeyFile  string // server private key (PEM)
 	TLSCAFile   string // CA certificate for mTLS client verification (optional)
 
+	// Database
+	DBFile string // SQLite database file path; use ":memory:" for in-memory (tests)
+
 	// Logging
 	LogLevel slog.Level
 }
@@ -49,6 +52,7 @@ func DefaultConfig() *Config {
 		MaxTransactionAmount: 10000000, // 100,000.00
 		SupportedCurrencies:  []string{"TRY", "USD", "EUR"},
 		TLSEnabled:           false,
+		DBFile:               "pos-terminal.db",
 		LogLevel:             slog.LevelInfo,
 	}
 }

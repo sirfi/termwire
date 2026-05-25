@@ -41,15 +41,19 @@ type ClientConnection struct {
 }
 
 // NewServer creates a new POS server
-func NewServer(config *Config) *Server {
+func NewServer(config *Config) (*Server, error) {
 	logger := slog.New(slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{Level: config.LogLevel}))
+	handler, err := NewMessageHandler(config)
+	if err != nil {
+		return nil, fmt.Errorf("creating message handler: %w", err)
+	}
 	return &Server{
 		config:      config,
-		handler:     NewMessageHandler(config),
+		handler:     handler,
 		connections: make(map[string]*ClientConnection),
 		shutdown:    make(chan struct{}),
 		logger:      logger,
-	}
+	}, nil
 }
 
 // Start starts the TCP server
@@ -381,6 +385,10 @@ func (s *Server) Stop() {
 	s.connMutex.Unlock()
 
 	s.wg.Wait()
+
+	if s.handler != nil {
+		s.handler.Close()
+	}
 
 	s.logger.Info("POS server stopped")
 }

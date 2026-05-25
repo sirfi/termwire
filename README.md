@@ -9,8 +9,8 @@ Termwire is a **demonstrative** POS (Point of Sale) terminal communication proto
 - **Frame-Based Protocol**: Binary protocol with CRC32 validation
 - **Protobuf Messages**: Efficient message serialization using Protocol Buffers
 - **Complete Payment Flow**: Support for card insertion, bank selection, loyalty points, and payment completion
-- **Transaction Management**: Support for sales, refunds, and void transactions
-- **Reporting**: X reports (without reset) and Z reports (with reset)
+- **Transaction Management**: Support for sales, refunds, and void transactions; completed transactions persisted in SQLite
+- **Reporting**: X reports (current batch totals) and Z reports (batch close — history preserved, new batch started)
 - **Gift Cards**: Balance inquiry and charge operations
 - **Heartbeat**: Automatic connection monitoring with ping/pong
 - **TLS/mTLS**: Optional TLS 1.3 encryption; mutual TLS when `TLSCAFile` is set on both sides
@@ -255,6 +255,8 @@ config := &pos.Config{
     TLSCertFile:          "certs/server.crt",
     TLSKeyFile:           "certs/server.key",
     TLSCAFile:            "certs/ca.crt", // enables mTLS client verification
+    // Database
+    DBFile:               "pos-terminal.db", // use ":memory:" for tests
     LogLevel:             slog.LevelInfo,
 }
 ```
@@ -385,7 +387,7 @@ go test -v ./ecr/
 - **ECR Client** (`ecr/client_test.go`): client initialization and sequence handling
 - **ECR Payment** (`ecr/payment_test.go`): payment structures
 
-**Total**: 37 unit tests, all passing
+**Total**: 39 unit tests, all passing
 
 ### Integration Testing
 
@@ -394,7 +396,8 @@ Run the POS terminal and an ECR example in separate terminals (see [Quick Test](
 ## Implementation Notes
 
 - **Card Reader**: Mock implementation — no real hardware required
-- **Transactions**: In-memory only; no persistence
+- **Transactions**: Completed transactions persisted in SQLite (`pos-terminal.db`); active transactions in-memory
+- **Z-Report**: Closes the current batch (`z_report_id`); transaction history preserved across batches
 - **Amounts**: Always in cents — divide by 100 for display
 - **Timestamps**: RFC3339 format
 - **Idempotency**: `message_id` is preserved on retries; duplicate requests are deduplicated
