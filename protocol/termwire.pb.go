@@ -24,28 +24,31 @@ const (
 type TransactionType int32
 
 const (
-	TransactionType_SALE             TransactionType = 0
-	TransactionType_REFUND           TransactionType = 1
-	TransactionType_VOID             TransactionType = 2
-	TransactionType_POINT_INQUIRY    TransactionType = 3
-	TransactionType_POINT_REDEMPTION TransactionType = 4
+	TransactionType_TRANSACTION_TYPE_UNSPECIFIED      TransactionType = 0
+	TransactionType_TRANSACTION_TYPE_SALE             TransactionType = 1
+	TransactionType_TRANSACTION_TYPE_REFUND           TransactionType = 2
+	TransactionType_TRANSACTION_TYPE_VOID             TransactionType = 3
+	TransactionType_TRANSACTION_TYPE_POINT_INQUIRY    TransactionType = 4
+	TransactionType_TRANSACTION_TYPE_POINT_REDEMPTION TransactionType = 5
 )
 
 // Enum value maps for TransactionType.
 var (
 	TransactionType_name = map[int32]string{
-		0: "SALE",
-		1: "REFUND",
-		2: "VOID",
-		3: "POINT_INQUIRY",
-		4: "POINT_REDEMPTION",
+		0: "TRANSACTION_TYPE_UNSPECIFIED",
+		1: "TRANSACTION_TYPE_SALE",
+		2: "TRANSACTION_TYPE_REFUND",
+		3: "TRANSACTION_TYPE_VOID",
+		4: "TRANSACTION_TYPE_POINT_INQUIRY",
+		5: "TRANSACTION_TYPE_POINT_REDEMPTION",
 	}
 	TransactionType_value = map[string]int32{
-		"SALE":             0,
-		"REFUND":           1,
-		"VOID":             2,
-		"POINT_INQUIRY":    3,
-		"POINT_REDEMPTION": 4,
+		"TRANSACTION_TYPE_UNSPECIFIED":      0,
+		"TRANSACTION_TYPE_SALE":             1,
+		"TRANSACTION_TYPE_REFUND":           2,
+		"TRANSACTION_TYPE_VOID":             3,
+		"TRANSACTION_TYPE_POINT_INQUIRY":    4,
+		"TRANSACTION_TYPE_POINT_REDEMPTION": 5,
 	}
 )
 
@@ -79,31 +82,34 @@ func (TransactionType) EnumDescriptor() ([]byte, []int) {
 type PaymentMethod int32
 
 const (
-	PaymentMethod_CASH                     PaymentMethod = 0
-	PaymentMethod_CREDIT_CARD              PaymentMethod = 1
-	PaymentMethod_DEBIT_CARD               PaymentMethod = 2
-	PaymentMethod_CHEQUE                   PaymentMethod = 3
-	PaymentMethod_ELECTRONIC_FUND_TRANSFER PaymentMethod = 4
-	PaymentMethod_OTHER                    PaymentMethod = 5
+	PaymentMethod_PAYMENT_METHOD_UNSPECIFIED              PaymentMethod = 0
+	PaymentMethod_PAYMENT_METHOD_CASH                     PaymentMethod = 1
+	PaymentMethod_PAYMENT_METHOD_CREDIT_CARD              PaymentMethod = 2
+	PaymentMethod_PAYMENT_METHOD_DEBIT_CARD               PaymentMethod = 3
+	PaymentMethod_PAYMENT_METHOD_CHEQUE                   PaymentMethod = 4
+	PaymentMethod_PAYMENT_METHOD_ELECTRONIC_FUND_TRANSFER PaymentMethod = 5
+	PaymentMethod_PAYMENT_METHOD_OTHER                    PaymentMethod = 6
 )
 
 // Enum value maps for PaymentMethod.
 var (
 	PaymentMethod_name = map[int32]string{
-		0: "CASH",
-		1: "CREDIT_CARD",
-		2: "DEBIT_CARD",
-		3: "CHEQUE",
-		4: "ELECTRONIC_FUND_TRANSFER",
-		5: "OTHER",
+		0: "PAYMENT_METHOD_UNSPECIFIED",
+		1: "PAYMENT_METHOD_CASH",
+		2: "PAYMENT_METHOD_CREDIT_CARD",
+		3: "PAYMENT_METHOD_DEBIT_CARD",
+		4: "PAYMENT_METHOD_CHEQUE",
+		5: "PAYMENT_METHOD_ELECTRONIC_FUND_TRANSFER",
+		6: "PAYMENT_METHOD_OTHER",
 	}
 	PaymentMethod_value = map[string]int32{
-		"CASH":                     0,
-		"CREDIT_CARD":              1,
-		"DEBIT_CARD":               2,
-		"CHEQUE":                   3,
-		"ELECTRONIC_FUND_TRANSFER": 4,
-		"OTHER":                    5,
+		"PAYMENT_METHOD_UNSPECIFIED":              0,
+		"PAYMENT_METHOD_CASH":                     1,
+		"PAYMENT_METHOD_CREDIT_CARD":              2,
+		"PAYMENT_METHOD_DEBIT_CARD":               3,
+		"PAYMENT_METHOD_CHEQUE":                   4,
+		"PAYMENT_METHOD_ELECTRONIC_FUND_TRANSFER": 5,
+		"PAYMENT_METHOD_OTHER":                    6,
 	}
 )
 
@@ -2340,7 +2346,7 @@ func (x *TransactionEntry) GetType() TransactionType {
 	if x != nil {
 		return x.Type
 	}
-	return TransactionType_SALE
+	return TransactionType_TRANSACTION_TYPE_UNSPECIFIED
 }
 
 func (x *TransactionEntry) GetAmountCents() uint32 {
@@ -2354,7 +2360,7 @@ func (x *TransactionEntry) GetPaymentMethod() PaymentMethod {
 	if x != nil {
 		return x.PaymentMethod
 	}
-	return PaymentMethod_CASH
+	return PaymentMethod_PAYMENT_METHOD_UNSPECIFIED
 }
 
 func (x *TransactionEntry) GetCardLastFour() string {
@@ -2592,7 +2598,7 @@ func (x *PaymentMethodTotals) GetMethod() PaymentMethod {
 	if x != nil {
 		return x.Method
 	}
-	return PaymentMethod_CASH
+	return PaymentMethod_PAYMENT_METHOD_UNSPECIFIED
 }
 
 func (x *PaymentMethodTotals) GetCurrency() string {
@@ -3147,23 +3153,22 @@ const file_termwire_v1_termwire_proto_rawDesc = "" +
 	"\bcurrency\x18\x05 \x01(\tR\bcurrency\"=\n" +
 	"\rErrorResponse\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\tR\x04code\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage*Z\n" +
-	"\x0fTransactionType\x12\b\n" +
-	"\x04SALE\x10\x00\x12\n" +
-	"\n" +
-	"\x06REFUND\x10\x01\x12\b\n" +
-	"\x04VOID\x10\x02\x12\x11\n" +
-	"\rPOINT_INQUIRY\x10\x03\x12\x14\n" +
-	"\x10POINT_REDEMPTION\x10\x04*o\n" +
-	"\rPaymentMethod\x12\b\n" +
-	"\x04CASH\x10\x00\x12\x0f\n" +
-	"\vCREDIT_CARD\x10\x01\x12\x0e\n" +
-	"\n" +
-	"DEBIT_CARD\x10\x02\x12\n" +
-	"\n" +
-	"\x06CHEQUE\x10\x03\x12\x1c\n" +
-	"\x18ELECTRONIC_FUND_TRANSFER\x10\x04\x12\t\n" +
-	"\x05OTHER\x10\x05Bj\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage*\xd1\x01\n" +
+	"\x0fTransactionType\x12 \n" +
+	"\x1cTRANSACTION_TYPE_UNSPECIFIED\x10\x00\x12\x19\n" +
+	"\x15TRANSACTION_TYPE_SALE\x10\x01\x12\x1b\n" +
+	"\x17TRANSACTION_TYPE_REFUND\x10\x02\x12\x19\n" +
+	"\x15TRANSACTION_TYPE_VOID\x10\x03\x12\"\n" +
+	"\x1eTRANSACTION_TYPE_POINT_INQUIRY\x10\x04\x12%\n" +
+	"!TRANSACTION_TYPE_POINT_REDEMPTION\x10\x05*\xe9\x01\n" +
+	"\rPaymentMethod\x12\x1e\n" +
+	"\x1aPAYMENT_METHOD_UNSPECIFIED\x10\x00\x12\x17\n" +
+	"\x13PAYMENT_METHOD_CASH\x10\x01\x12\x1e\n" +
+	"\x1aPAYMENT_METHOD_CREDIT_CARD\x10\x02\x12\x1d\n" +
+	"\x19PAYMENT_METHOD_DEBIT_CARD\x10\x03\x12\x19\n" +
+	"\x15PAYMENT_METHOD_CHEQUE\x10\x04\x12+\n" +
+	"'PAYMENT_METHOD_ELECTRONIC_FUND_TRANSFER\x10\x05\x12\x18\n" +
+	"\x14PAYMENT_METHOD_OTHER\x10\x06Bj\n" +
 	"\x1bcom.sirfi.termwire.protocolB\rTermwireProtoZ\"github.com/sirfi/termwire/protocol\xaa\x02\x17Sirfi.Termwire.Protocolb\x06proto3"
 
 var (

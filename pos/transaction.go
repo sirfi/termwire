@@ -511,11 +511,11 @@ func (tm *TransactionManager) GenerateDetailedReport(fromTime, toTime time.Time,
 		var txnType pb.TransactionType
 		switch txn.State {
 		case StatePaymentCompleted:
-			txnType = pb.TransactionType_SALE
+			txnType = pb.TransactionType_TRANSACTION_TYPE_SALE
 		case StateRefunded:
-			txnType = pb.TransactionType_REFUND
+			txnType = pb.TransactionType_TRANSACTION_TYPE_REFUND
 		case StateVoided:
-			txnType = pb.TransactionType_VOID
+			txnType = pb.TransactionType_TRANSACTION_TYPE_VOID
 		default:
 			continue
 		}
@@ -529,7 +529,7 @@ func (tm *TransactionManager) GenerateDetailedReport(fromTime, toTime time.Time,
 			TransactionId:      txn.ID,
 			Type:               txnType,
 			AmountCents:        txn.AmountCents,
-			PaymentMethod:      pb.PaymentMethod_CREDIT_CARD,
+			PaymentMethod:      pb.PaymentMethod_PAYMENT_METHOD_CREDIT_CARD,
 			CardLastFour:       cardLastFour,
 			LoyaltyAmountCents: txn.LoyaltyAmountCents,
 			ConfirmationCode:   txn.ConfirmationCode,
