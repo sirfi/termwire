@@ -61,21 +61,28 @@ func main() {
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
 
-	go printStatsPeriodically(server, logger)
+	statsDone := make(chan struct{})
+	go printStatsPeriodically(server, logger, statsDone)
 
 	<-sigChan
 	logger.Info("received shutdown signal")
+	close(statsDone)
 	server.Stop()
 	logger.Info("POS terminal shutdown complete")
 }
 
-func printStatsPeriodically(server *pos.Server, logger *slog.Logger) {
+func printStatsPeriodically(server *pos.Server, logger *slog.Logger, done <-chan struct{}) {
 	ticker := time.NewTicker(60 * time.Second)
 	defer ticker.Stop()
 
-	for range ticker.C {
-		stats := server.GetStats()
-		logger.Info("server statistics", slog.Any("stats", stats))
+	for {
+		select {
+		case <-done:
+			return
+		case <-ticker.C:
+			stats := server.GetStats()
+			logger.Info("server statistics", slog.Any("stats", stats))
+		}
 	}
 }
 

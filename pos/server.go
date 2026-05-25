@@ -137,24 +137,11 @@ func (s *Server) acceptConnections() {
 	defer s.wg.Done()
 
 	for {
-		select {
-		case <-s.shutdown:
-			s.logger.Info("accept loop stopped")
-			return
-		default:
-		}
-
-		if dl, ok := s.listener.(interface{ SetDeadline(t time.Time) error }); ok {
-			dl.SetDeadline(time.Now().Add(1 * time.Second))
-		}
-
 		conn, err := s.listener.Accept()
 		if err != nil {
-			if netErr, ok := err.(net.Error); ok && netErr.Timeout() {
-				continue
-			}
 			select {
 			case <-s.shutdown:
+				s.logger.Info("accept loop stopped")
 				return
 			default:
 				s.logger.Error("accept error", slog.Any("error", err))
@@ -380,17 +367,31 @@ func (s *Server) monitorConnections() {
 
 // checkIdleConnections closes idle connections
 func (s *Server) checkIdleConnections() {
-	s.connMutex.Lock()
-	defer s.connMutex.Unlock()
-
 	now := time.Now()
-	for id, client := range s.connections {
+
+	s.connMutex.RLock()
+	var idle []*ClientConnection
+	for _, client := range s.connections {
 		if now.Sub(client.lastActive) > s.config.IdleTimeout {
-			s.logger.Info("closing idle connection", slog.String("client_id", id))
-			client.conn.Close()
-			delete(s.connections, id)
+			idle = append(idle, client)
 		}
 	}
+	s.connMutex.RUnlock()
+
+	if len(idle) == 0 {
+		return
+	}
+
+	for _, client := range idle {
+		s.logger.Info("closing idle connection", slog.String("client_id", client.id))
+		client.conn.Close()
+	}
+
+	s.connMutex.Lock()
+	for _, client := range idle {
+		delete(s.connections, client.id)
+	}
+	s.connMutex.Unlock()
 }
 
 // Stop stops the server gracefully
