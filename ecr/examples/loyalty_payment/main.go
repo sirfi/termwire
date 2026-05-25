@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/sirfi/termwire/ecr"
 )
@@ -32,17 +33,22 @@ func main() {
 	// Create payment flow
 	paymentFlow := ecr.NewPaymentFlow(api)
 
+	ts := time.Now().UnixMilli()
+	txn1 := fmt.Sprintf("TXN-LOYALTY-1-%d", ts)
+	txn2 := fmt.Sprintf("TXN-LOYALTY-2-%d", ts)
+	txn3 := fmt.Sprintf("TXN-LOYALTY-3-%d", ts)
+
 	// Example 1: Payment with automatic loyalty point usage
 	fmt.Println("=== Payment 1: Automatic Loyalty Points ===")
 	fmt.Println("Amount: 200.00 TRY")
-	fmt.Println("Transaction ID: TXN-LOYALTY-001")
+	fmt.Printf("Transaction ID: %s\n", txn1)
 	fmt.Println("Loyalty: Use all available points")
 
 	result1, err := paymentFlow.ExecuteLoyaltyPayment(
-		"TXN-LOYALTY-001", // Transaction ID
-		20000,             // Amount in cents (200.00 TRY)
-		"TRY",             // Currency
-		0,                 // Use all available points (0 = auto)
+		txn1,  // Transaction ID
+		20000, // Amount in cents (200.00 TRY)
+		"TRY", // Currency
+		0,     // Use all available points (0 = auto)
 	)
 
 	if err != nil {
@@ -62,14 +68,14 @@ func main() {
 	// Example 2: Payment with specific loyalty points
 	fmt.Println("=== Payment 2: Specific Loyalty Points ===")
 	fmt.Println("Amount: 350.00 TRY")
-	fmt.Println("Transaction ID: TXN-LOYALTY-002")
+	fmt.Printf("Transaction ID: %s\n", txn2)
 	fmt.Println("Loyalty: Use 5000 points (50.00 TRY)")
 
 	result2, err := paymentFlow.ExecuteLoyaltyPayment(
-		"TXN-LOYALTY-002", // Transaction ID
-		35000,             // Amount in cents (350.00 TRY)
-		"TRY",             // Currency
-		5000,              // Use 5000 points
+		txn2,  // Transaction ID
+		35000, // Amount in cents (350.00 TRY)
+		"TRY", // Currency
+		5000,  // Use 5000 points
 	)
 
 	if err != nil {
@@ -85,9 +91,9 @@ func main() {
 	// Example 3: Payment using manual flow for more control
 	fmt.Println("\n=== Payment 3: Manual Loyalty Flow ===")
 	fmt.Println("Amount: 500.00 TRY")
-	fmt.Println("Transaction ID: TXN-LOYALTY-003")
+	fmt.Printf("Transaction ID: %s\n", txn3)
 
-	transactionID := "TXN-LOYALTY-003"
+	transactionID := txn3
 	amountCents := uint32(50000) // 500.00 TRY
 
 	// Step 1: Insert card

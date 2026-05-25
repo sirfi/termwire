@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/sirfi/termwire/ecr"
 )
@@ -31,13 +32,18 @@ func main() {
 	// Create payment flow
 	paymentFlow := ecr.NewPaymentFlow(api)
 
+	ts := time.Now().UnixMilli()
+	txnOriginal := fmt.Sprintf("TXN-ORIGINAL-%d", ts)
+	txnVoid := fmt.Sprintf("TXN-VOID-%d", ts)
+	txnFullRefund := fmt.Sprintf("TXN-FULLREFUND-%d", ts)
+
 	// First, make a payment that we'll refund/void
 	fmt.Println("=== Step 1: Create Original Transaction ===")
 	fmt.Println("Amount: 250.00 TRY")
-	fmt.Println("Transaction ID: TXN-ORIGINAL-001")
+	fmt.Printf("Transaction ID: %s\n", txnOriginal)
 
 	originalResult, err := paymentFlow.ExecuteSimplePayment(
-		"TXN-ORIGINAL-001",
+		txnOriginal,
 		25000,
 		"TRY",
 	)
@@ -84,10 +90,10 @@ func main() {
 	// Create another transaction for void example
 	fmt.Println("\n=== Step 3: Create Another Transaction for Void ===")
 	fmt.Println("Amount: 175.00 TRY")
-	fmt.Println("Transaction ID: TXN-VOID-001")
+	fmt.Printf("Transaction ID: %s\n", txnVoid)
 
 	voidOriginalResult, err := paymentFlow.ExecuteSimplePayment(
-		"TXN-VOID-001",
+		txnVoid,
 		17500,
 		"TRY",
 	)
@@ -131,10 +137,10 @@ func main() {
 	// Example 3: Full Refund
 	fmt.Println("\n=== Step 5: Create Transaction for Full Refund ===")
 	fmt.Println("Amount: 300.00 TRY")
-	fmt.Println("Transaction ID: TXN-FULLREFUND-001")
+	fmt.Printf("Transaction ID: %s\n", txnFullRefund)
 
 	fullRefundOriginal, err := paymentFlow.ExecuteSimplePayment(
-		"TXN-FULLREFUND-001",
+		txnFullRefund,
 		30000,
 		"TRY",
 	)

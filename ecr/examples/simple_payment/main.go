@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/sirfi/termwire/ecr"
 )
@@ -52,14 +53,15 @@ func main() {
 	paymentFlow := ecr.NewPaymentFlow(api)
 
 	// Execute a simple payment
+	txnID := fmt.Sprintf("TXN-SIMPLE-%d", time.Now().UnixMilli())
 	fmt.Println("=== Processing Payment ===")
 	fmt.Println("Amount: 150.00 TRY")
-	fmt.Println("Transaction ID: TXN-SIMPLE-001")
+	fmt.Printf("Transaction ID: %s\n", txnID)
 
 	result, err := paymentFlow.ExecuteSimplePayment(
-		"TXN-SIMPLE-001", // Transaction ID
-		15000,            // Amount in cents (150.00 TRY)
-		"TRY",            // Currency
+		txnID, // Transaction ID
+		15000, // Amount in cents (150.00 TRY)
+		"TRY", // Currency
 	)
 
 	if err != nil {
